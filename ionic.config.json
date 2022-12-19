@@ -1,0 +1,7 @@
+{
+  "name": "orion-frontend-test",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
