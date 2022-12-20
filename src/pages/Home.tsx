@@ -1,29 +1,40 @@
-import { IonButton, IonButtons, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonMenuButton, IonPage, IonSearchbar, IonTitle, IonToolbar } from '@ionic/react';
-import { useState } from 'react';
-import { colorPaletteSharp, search, star } from 'ionicons/icons';
+import { IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonPage, IonTitle } from '@ionic/react';
+import { useEffect, useState } from 'react';
+import { colorPaletteSharp } from 'ionicons/icons';
 import './Home.css';
 import movieDatabase from '../movie-database.json';
 import MovieList from '../components/MovieList';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SearchBar from '../components/SearchBar';
+import ToolBar from '../components/ToolBar';
 
 const Home: React.FC = () => {
-  const [ movieCatalog, setMovieCatalog ] = useState([ movieDatabase ]);
+  const [ movieCatalog, setMovieCatalog ] = useState(movieDatabase);
+  const [ searchValue, setSearchValue ] = useState<string>('');
+
+  const searchMovieCatalog = ( searchValue: string | undefined ) => {
+    const movieCatalogCopy = movieDatabase.slice();
+
+    if ( searchValue?.length != 0 ) {
+      const movieCatalogFiltered = movieCatalogCopy.filter((obj) => {
+        return obj.name.toLowerCase().includes(searchValue!.toLowerCase());
+      });
+
+      setMovieCatalog(movieCatalogFiltered);
+    } else {
+      setMovieCatalog(movieDatabase);
+    }
+    
+  };
+  
+  useEffect(()=>{
+    searchMovieCatalog(searchValue);
+  },[ searchValue ]);
+    
 
   return (
     <IonPage>
       <IonHeader mode='md'>
-        <IonToolbar>
-          <IonButtons slot="primary">
-            <IonButton onClick={() => {}}>
-              <IonIcon slot="icon-only" icon={search} />
-            </IonButton>
-            <IonButton>
-              <IonIcon slot="icon-only" icon={star} />
-            </IonButton>
-          </IonButtons>
-          <SearchBar/>
-        </IonToolbar>       
+        <ToolBar searchValue={searchValue} setSearchValue={setSearchValue} />  
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader>
@@ -32,8 +43,8 @@ const Home: React.FC = () => {
             <IonTitle>Movie Catalog</IonTitle>
           </IonItem>          
         </IonHeader> 
-        <IonGrid fixed={false}>
-          <MovieList movieCatalog={movieDatabase} />
+        <IonGrid fixed={true} className="ion-padding-end">
+          <MovieList movieCatalog={movieCatalog} />
         </IonGrid>
         
       </IonContent>

@@ -3,7 +3,7 @@
     width: 100%;
 }
 
-.searchBar {
-    margin: auto;
-    flex-basis: 50px;
+.moviePoster:hover {
+    cursor: pointer;
+    transform: scale(0.9, 0.9) rotate(1deg);
 }

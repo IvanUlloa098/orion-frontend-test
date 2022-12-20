@@ -9,8 +9,10 @@ const MovieList: React.FC<ContainerProps> = props => {
     return (
         <IonRow>
             {props.movieCatalog.map((movie: any, index: any) => 
-                <IonCol size='3' size-sm='2' key={index}>
-                    <img className='moviePoster' src={movie.image} alt='movie' ></img>
+                <IonCol  size='4' size-sm='3' key={index}>      
+                    <IonCard className='moviePoster'>
+                        <img  src={movie.image} alt='movie' ></img>
+                    </IonCard>        
                 </IonCol>
             )}
         </IonRow>  
