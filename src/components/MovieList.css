@@ -1,0 +1,9 @@
+.moviePoster {
+    height: auto;
+    width: 100%;
+}
+
+.searchBar {
+    margin: auto;
+    flex-basis: 50px;
+}
