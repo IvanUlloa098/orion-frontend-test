@@ -1,7 +1,6 @@
 import { IonCard, IonCol, IonRow } from '@ionic/react';
 import './AllMovieList.css';
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface ContainerProps { movieCatalog: any };
 

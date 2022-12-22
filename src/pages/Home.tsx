@@ -1,11 +1,11 @@
-import { IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonPage, IonTitle } from '@ionic/react';
+import { IonContent, IonGrid, IonHeader, IonItem, IonPage, IonTitle } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { colorPaletteSharp } from 'ionicons/icons';
 import './Home.css';
 import movieDatabase from '../movie-database.json';
 import AllMovieList from '../components/AllMovieList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ToolBar from '../components/ToolBar';
+import GenreMovieList from '../components/GenreMovieList';
 
 const Home: React.FC = () => {
   const reverseMovieCatalog = (catalog: any) => {
@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   const searchMovieCatalog = ( searchValue: string | undefined ) => {
     const movieCatalogCopy = movieDatabase.slice();
 
-    if ( searchValue?.length != 0 ) {
+    if ( searchValue?.length !== 0 ) {
       const movieCatalogFiltered = movieCatalogCopy.filter((obj) => {
         return obj.name.toLowerCase().includes(searchValue!.toLowerCase());
       });
@@ -71,11 +71,20 @@ const Home: React.FC = () => {
             <IonTitle>Movie Catalog</IonTitle>
           </IonItem>          
         </IonHeader> 
-        
-        <IonGrid fixed={true} >
-          <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
-          <AllMovieList movieCatalog={movieCatalog} />
-        </IonGrid>        
+
+        {(sortValue !== 'genre')  && ( 
+          <IonGrid fixed={true} >
+            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+            <AllMovieList movieCatalog={movieCatalog} />
+          </IonGrid>       
+        )}
+
+        {sortValue === 'genre' && (
+          <div className='container-fluid movie-tray'>
+            <GenreMovieList movieCatalog={movieCatalog}/>          
+          </div>
+        )}
+
       </IonContent>
     </IonPage>
   );

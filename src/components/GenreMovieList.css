@@ -1,0 +1,10 @@
+.genrePoster {
+    max-width: 15%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
+.genrePoster:hover {
+    cursor: pointer;
+    transform: scale(0.9, 0.9) rotate(1deg);
+}

@@ -1,0 +1,4 @@
+.movie-tray > .row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
