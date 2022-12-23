@@ -1,15 +1,19 @@
 import { IonCard, IonCol, IonRow } from '@ionic/react';
 import './AllMovieList.css';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
-interface ContainerProps { movieCatalog: any };
+interface ContainerProps { 
+    movieCatalog: any; 
+    showMovieDetailState: number; 
+    setShowMovieDetailState: Dispatch<SetStateAction<number>> 
+};
 
 const AllMovieList: React.FC<ContainerProps> = props => { 
     return (
         <IonRow>
             {props.movieCatalog.map((movie: any, index: any) => 
-                <IonCol size='4' size-sm='2' key={index}>      
-                    <IonCard className='moviePoster'>
+                <IonCol size='4' size-sm='2' key={movie.id}>      
+                    <IonCard button onClick={() => { props.setShowMovieDetailState(movie.id) }} className='moviePoster'>
                         <img  src={movie.image} alt='movie' ></img>
                     </IonCard>        
                 </IonCol>

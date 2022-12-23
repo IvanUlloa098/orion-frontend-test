@@ -1,11 +1,12 @@
-import { IonContent, IonGrid, IonHeader, IonItem, IonPage, IonTitle } from '@ionic/react';
-import { useEffect, useState } from 'react';
+import { IonContent, IonGrid, IonHeader, IonItem, IonModal, IonPage, IonTitle } from '@ionic/react';
+import { useEffect, useRef, useState } from 'react';
 import './Home.css';
 import movieDatabase from '../movie-database.json';
 import AllMovieList from '../components/AllMovieList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ToolBar from '../components/ToolBar';
 import GenreMovieList from '../components/GenreMovieList';
+import SelectedMovieDetails from '../components/SelectedMovieDetails';
 
 const Home: React.FC = () => {
   const reverseMovieCatalog = (catalog: any) => {
@@ -14,10 +15,16 @@ const Home: React.FC = () => {
     const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.id < b.id ? 1 : -1);
     return movieCatalogSorted;    
   }
+
+  const modal = useRef<HTMLIonModalElement>(null);
+  const page = useRef(null);
   
   const [ movieCatalog, setMovieCatalog ] = useState(() => reverseMovieCatalog(movieDatabase));
   const [ searchValue, setSearchValue ] = useState<string>('');
   const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre'>('all');
+  const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
+  const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
+  const [showMovieDetailsModal, setShowMovieDetailsModal] = useState<boolean>(false);
 
   const searchMovieCatalog = ( searchValue: string | undefined ) => {
     const movieCatalogCopy = movieDatabase.slice();
@@ -48,6 +55,14 @@ const Home: React.FC = () => {
     }
 
   };
+
+  const dismissMovieDetailsModal = () => {
+    modal.current?.dismiss();    
+  }
+
+  const onMovieDetailsModalDismiss = () => {
+    setShowMovieDetailsModal(false);
+  }
   
   useEffect(()=>{
     searchMovieCatalog(searchValue);
@@ -56,9 +71,16 @@ const Home: React.FC = () => {
   useEffect(() => {
     sortMovieCatalog(sortValue);
   }, [ sortValue ] );
+
+  useEffect(() => {
+    if (showMovieDetailState >= 0){
+      setShowMovieDetailsModal(true);
+    }
+  }, [ showMovieDetailState ] );
   
+
   return (
-    <IonPage>
+    <IonPage ref={page}>
       <IonHeader mode='md'>
         <ToolBar searchValue={searchValue} setSearchValue={setSearchValue} sortValue={sortValue} setSortValue={setSortValue} />  
       </IonHeader>
@@ -72,14 +94,20 @@ const Home: React.FC = () => {
           </IonItem>          
         </IonHeader> 
 
+        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="example-modal" ref={modal} trigger="open-modal" presentingElement={presentingElement!}>
+          <SelectedMovieDetails selectedMovie={
+            movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] 
+          } dismissMovieDetailsModal={dismissMovieDetailsModal} ></SelectedMovieDetails>
+        </IonModal>
+
         {(sortValue !== 'genre')  && ( 
           <IonGrid fixed={true} >
             <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
-            <AllMovieList movieCatalog={movieCatalog} />
+            <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
           </IonGrid>       
         )}
 
-        {sortValue === 'genre' && (
+        {(sortValue === 'genre') && (
           <div className='container-fluid movie-tray'>
             <GenreMovieList movieCatalog={movieCatalog}/>          
           </div>

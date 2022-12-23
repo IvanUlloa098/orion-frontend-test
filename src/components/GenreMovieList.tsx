@@ -22,11 +22,11 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
         <>
             {
                 allMovieGenres.map((genre, index) =>  
-                    <div>
+                    <div key={index}>
                         <IonTitle className='ion-padding'>{genre}</IonTitle>
                         <div className='row' key={index}>                        
                             {getMovieGivenGenre(genre).map((movie: any, index: any) => 
-                                <div className='genrePoster' key={index}>
+                                <div className='genrePoster' key={movie.id}>
                                     <IonCard><img src={movie.image} alt="movie" /></IonCard>                    
                                 </div>
                             )}

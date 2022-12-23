@@ -5,7 +5,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 interface ContainerProps { 
     searchValue: string; 
     setSearchValue: Dispatch<SetStateAction<string>>; 
-    sortValue: 'all' | 'up' | 'down' | 'genre'; 
+    sortValue: 'all' | 'up' | 'down' | 'genre' ; 
     setSortValue: Dispatch<SetStateAction<'all' | 'up' | 'down' | 'genre'>>; 
 };
 
