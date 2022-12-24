@@ -1,5 +1,5 @@
-import { IonButton, IonButtons, IonIcon, IonItem, IonList, IonListHeader, IonPopover, IonSearchbar, IonToolbar } from '@ionic/react';
-import { filter, funnel, star } from 'ionicons/icons';
+import { IonButton, IonButtons, IonIcon, IonItem, IonList, IonPopover, IonSearchbar, IonToolbar } from '@ionic/react';
+import { filter, heart } from 'ionicons/icons';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
 interface ContainerProps { 
@@ -69,7 +69,7 @@ const ToolBar: React.FC<ContainerProps> = props => {
                         Sort                         
                     </IonButton>                   
                     <IonButton>
-                        <IonIcon slot='start' icon={star} />
+                        <IonIcon slot='start' icon={heart} />
                         Favorites
                     </IonButton>
                 </IonButtons>

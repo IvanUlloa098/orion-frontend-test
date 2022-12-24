@@ -2,12 +2,12 @@
     {
         "id": 1,
         "name": "Whiplash",
-        "actor": {            
-            "name1": "Miles Teller",
-            "name2": "J.K. Simmons",         
-            "name3": "Melissa Benoist"
-        },
-        "ratingValue": 8.5,
+        "actor": [           
+            "Miles Teller",
+            "J.K. Simmons",         
+            "Melissa Benoist"
+        ],
+        "ratingValue": 4,
         "contentRating": "R",
         "datePublished": "2014-10-15",
         "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student\u0026apos;s potential.",
@@ -23,12 +23,12 @@
     {
         "id": 2,
         "name": "Warrior",
-        "actor": {
-              "name1": "Tom Hardy",
-              "name2": "Nick Nolte",
-              "name3": "Joel Edgerton"
-        },
-        "ratingValue": 8.2,
+        "actor": [
+              "Tom Hardy",
+              "Nick Nolte",
+              "Joel Edgerton"
+        ],
+        "ratingValue": 4,
         "contentRating": "PG-13",
         "datePublished": "2011-09-09",
         "description": "The youngest son of an alcoholic former boxer returns home, where he\u0026apos;s trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.",
@@ -45,12 +45,12 @@
     {
         "id": 3,
         "name": "WALL·E",
-        "actor": {
-              "name1": "Ben Burtt",
-              "name2": "Elissa Knight",
-              "name3": "Jeff Garlin"
-        },
-        "ratingValue": 8.4,
+        "actor": [
+              "Ben Burtt",
+              "Elissa Knight",
+              "Jeff Garlin"
+        ],
+        "ratingValue": 4.5,
         "contentRating": "G",
         "datePublished": "2008-06-27",
         "description": "In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.",
@@ -67,12 +67,12 @@
     {
         "id": 4,
         "name": "12 Years a Slave",
-        "actor": {
-            "name1": "Chiwetel Ejiofor",
-            "name2": "Michael Kenneth Williams",
-            "name3": "Michael Fassbender"
-        },
-        "ratingValue": 8.1,
+        "actor": [
+            "Chiwetel Ejiofor",
+            "Michael Kenneth Williams",
+            "Michael Fassbender"
+        ],
+        "ratingValue": 4,
         "contentRating": "R",
         "datePublished": "2013-11-08",
         "description": "In the antebellum United States, Solomon Northup, a free black man from upstate New York, is abducted and sold into slavery.",
@@ -89,12 +89,12 @@
     {
         "id": 5,
         "name": "2001: A Space Odyssey",
-        "actor": {
-            "name1": "Keir Dullea",
-            "name2": "Gary Lockwood",
-            "name3": "William Sylvester"
-        },
-        "ratingValue": 8.3,
+        "actor": [
+            "Keir Dullea",
+            "Gary Lockwood",
+            "William Sylvester"
+        ],
+        "ratingValue": 4,
         "contentRating": "G",
         "datePublished": "1970-06-24",
         "description": "After uncovering a mysterious artifact buried beneath the Lunar surface, a spacecraft is sent to Jupiter to find its origins - a spacecraft manned by two men and the supercomputer H.A.L. 9000.",
@@ -110,12 +110,12 @@
     {
         "id": 6,
         "name": "Before Sunset",
-        "actor": {
-            "name1": "Ethan Hawke",
-            "name2": "Julie Delpy",
-            "name3": "Vernon Dobtcheff"
-        },
-        "ratingValue": 8.1,
+        "actor": [
+            "Ethan Hawke",
+            "Julie Delpy",
+            "Vernon Dobtcheff"
+        ],
+        "ratingValue": 4,
         "contentRating": "R",
         "datePublished": "2004-07-30",
         "description": "Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse\u0026apos;s book tour.",
@@ -130,12 +130,12 @@
     {
         "id": 7,
         "name": "Braveheart",
-        "actor": {
-            "name1": "Mel Gibson",
-            "name2": "Sophie Marceau",
-            "name3": "Patrick McGoohan"
-        },
-        "ratingValue": 8.4,
+        "actor": [
+            "Mel Gibson",
+            "Sophie Marceau",
+            "Patrick McGoohan"
+        ],
+        "ratingValue": 4,
         "contentRating": "R",
         "datePublished": "1995-05-24",
         "description": "Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England.",
@@ -151,12 +151,12 @@
     {
         "id": 8,
         "name": "Catch Me If You Can",
-        "actor": {
-            "name1": "Leonardo DiCaprio",
-            "name2": "Tom Hanks",
-            "name3": "Christopher Walken"
-        },
-        "ratingValue": 8.1,
+        "actor": [
+            "Leonardo DiCaprio",
+            "Tom Hanks",
+            "Christopher Walken"
+        ],
+        "ratingValue": 4,
         "contentRating": "PG-13",
         "datePublished": "2002-12-25",
         "description": "Barely 21 yet, Frank is a skilled forger who has passed as a doctor, lawyer and pilot. FBI agent Carl becomes obsessed with tracking down the con man, who only revels in the pursuit.",
@@ -172,12 +172,12 @@
     {
         "id": 9,
         "name": "Coco",
-        "actor": {
-            "name1": "Anthony Gonzalez",
-            "name2": "Gael García Bernal",
-            "name3": "Benjamin Bratt"
-        },
-        "ratingValue": 8.4,
+        "actor": [
+            "Anthony Gonzalez",
+            "Gael García Bernal",
+            "Benjamin Bratt"
+        ],
+        "ratingValue": 3.5,
         "contentRating": "PG",
         "datePublished": "2017-11-22",
         "description": "Aspiring musician Miguel, confronted with his family\u0026apos;s ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.",
@@ -193,12 +193,12 @@
     {
         "id": 10,
         "name": "Django Unchained",
-        "actor": {
-            "name1": "Jamie Foxx",
-            "name2": "Christoph Waltz",
-            "name3": "Leonardo DiCaprio"
-        },
-        "ratingValue": 8.4,
+        "actor": [
+            "Jamie Foxx",
+            "Christoph Waltz",
+            "Leonardo DiCaprio"
+        ],
+        "ratingValue": 5,
         "contentRating": "R",
         "datePublished": "2012-12-25",
         "description": "With the help of a German bounty-hunter, a freed slave sets out to rescue his wife from a brutal plantation-owner in Mississippi.",

@@ -1,8 +1,12 @@
 import { IonCard, IonTitle } from '@ionic/react';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import './GenreMovieList.css';
 
-interface ContainerProps { movieCatalog: any };
+interface ContainerProps { 
+    movieCatalog: any;
+    showMovieDetailState: number; 
+    setShowMovieDetailState: Dispatch<SetStateAction<number>>;
+ };
 
 const GenreMovieList: React.FC<ContainerProps> = props => {
     let allMovieGenres: any[] = [];
@@ -27,7 +31,11 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                         <div className='row' key={index}>                        
                             {getMovieGivenGenre(genre).map((movie: any, index: any) => 
                                 <div className='genrePoster' key={movie.id}>
-                                    <IonCard><img src={movie.image} alt="movie" /></IonCard>                    
+                                    <IonCard 
+                                        className='ion-no-padding'><img src={movie.image} 
+                                        alt="movie" 
+                                        onClick={() => { props.setShowMovieDetailState(movie.id) }} 
+                                    /></IonCard>                    
                                 </div>
                             )}
                         </div>

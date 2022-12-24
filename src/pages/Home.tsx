@@ -25,6 +25,8 @@ const Home: React.FC = () => {
   const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
   const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
   const [showMovieDetailsModal, setShowMovieDetailsModal] = useState<boolean>(false);
+  const [movieDetailsEditState, setMovieDetailsEditState] = useState<boolean>(true);
+  const [movieRating, setMovieRating] = useState(0);
 
   const searchMovieCatalog = ( searchValue: string | undefined ) => {
     const movieCatalogCopy = movieDatabase.slice();
@@ -57,10 +59,12 @@ const Home: React.FC = () => {
   };
 
   const dismissMovieDetailsModal = () => {
-    modal.current?.dismiss();    
+    modal.current?.dismiss();  
+    onMovieDetailsModalDismiss();  
   }
 
   const onMovieDetailsModalDismiss = () => {
+    setShowMovieDetailState(-1);
     setShowMovieDetailsModal(false);
   }
   
@@ -94,10 +98,15 @@ const Home: React.FC = () => {
           </IonItem>          
         </IonHeader> 
 
-        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="example-modal" ref={modal} trigger="open-modal" presentingElement={presentingElement!}>
+        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modal} presentingElement={presentingElement!}>
           <SelectedMovieDetails selectedMovie={
             movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] 
-          } dismissMovieDetailsModal={dismissMovieDetailsModal} ></SelectedMovieDetails>
+          } dismissMovieDetailsModal={dismissMovieDetailsModal} 
+            movieDetailsEditState={movieDetailsEditState}
+            setMovieDetailsEditState={setMovieDetailsEditState}
+            rating={movieRating}
+            setRating={setMovieRating}
+          ></SelectedMovieDetails>
         </IonModal>
 
         {(sortValue !== 'genre')  && ( 
@@ -109,7 +118,7 @@ const Home: React.FC = () => {
 
         {(sortValue === 'genre') && (
           <div className='container-fluid movie-tray'>
-            <GenreMovieList movieCatalog={movieCatalog}/>          
+            <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>          
           </div>
         )}
 

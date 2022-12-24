@@ -5,7 +5,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 interface ContainerProps { 
     movieCatalog: any; 
     showMovieDetailState: number; 
-    setShowMovieDetailState: Dispatch<SetStateAction<number>> 
+    setShowMovieDetailState: Dispatch<SetStateAction<number>>;
 };
 
 const AllMovieList: React.FC<ContainerProps> = props => { 
@@ -13,7 +13,11 @@ const AllMovieList: React.FC<ContainerProps> = props => {
         <IonRow>
             {props.movieCatalog.map((movie: any, index: any) => 
                 <IonCol size='4' size-sm='2' key={movie.id}>      
-                    <IonCard button onClick={() => { props.setShowMovieDetailState(movie.id) }} className='moviePoster'>
+                    <IonCard 
+                        button 
+                        onClick={() => { props.setShowMovieDetailState(movie.id) }} 
+                        className='moviePoster'
+                    >
                         <img  src={movie.image} alt='movie' ></img>
                     </IonCard>        
                 </IonCol>
