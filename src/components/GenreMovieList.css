@@ -1,10 +1,43 @@
-.genrePoster {
-    max-width: 15%;
-    height: auto;
-    width: auto\9; /* ie8 */
-}
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
 
 .genrePoster:hover {
     cursor: pointer;
     transform: scale(0.9, 0.9) rotate(1deg);
+}
+
+.movie-tray > .row {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+}
+
+@layer utilities {
+    .scrollbar::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+  
+    .scrollbar::-webkit-scrollbar-track {
+      border-radius: 100vh;
+      background: #41464b;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: #000000;
+      border-radius: 100vh;
+      border: 3px solid #f6f7ed00;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #212529;
+    }
+}
+
+ion-button {
+    --background: #ffffff00;
+    width: 46px;
+    height: 280px;
 }

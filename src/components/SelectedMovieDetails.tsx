@@ -56,11 +56,11 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 </IonItem>
                                 <IonItem>
                                     <IonLabel position="stacked">Director</IonLabel>
-                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.genre[0]}></IonInput>
+                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.director}></IonInput>
                                 </IonItem>
                                 <IonItem>
                                     <IonLabel position="stacked">Genre</IonLabel>
-                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.datePublished}></IonInput>
+                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.genre[0]}></IonInput>
                                 </IonItem>
                                 <IonItem>
                                     <IonLabel position="stacked">Release Date</IonLabel>

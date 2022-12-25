@@ -1,7 +1,6 @@
-.movie-tray > .row {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 ion-modal#movie-modal {
     --max-width: 98%;

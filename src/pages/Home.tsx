@@ -116,9 +116,9 @@ const Home: React.FC = () => {
           </IonGrid>       
         )}
 
-        {(sortValue === 'genre') && (
-          <div className='container-fluid movie-tray'>
-            <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>          
+        {(sortValue === 'genre') && (     
+          <div className='container-fluid'>     
+            <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>                     
           </div>
         )}
 
