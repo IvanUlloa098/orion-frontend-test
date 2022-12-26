@@ -1,16 +1,17 @@
 import { IonContent, IonGrid, IonHeader, IonItem, IonModal, IonPage, IonTitle } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import './Home.css';
-import movieDatabase from '../movie-database.json';
 import AllMovieList from '../components/AllMovieList';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ToolBar from '../components/ToolBar';
 import GenreMovieList from '../components/GenreMovieList';
 import SelectedMovieDetails from '../components/SelectedMovieDetails';
+import MovieDataFetch from '../services/movieDataFetch/service';
+import saveToJson from '../services/movieDataFetch/test';
 
 const Home: React.FC = () => {
   const reverseMovieCatalog = (catalog: any) => {
-    const movieCatalogCopy = catalog.slice();
+    const movieCatalogCopy = catalog;
 
     const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.id < b.id ? 1 : -1);
     return movieCatalogSorted;    
@@ -19,7 +20,7 @@ const Home: React.FC = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
   
-  const [ movieCatalog, setMovieCatalog ] = useState(() => reverseMovieCatalog(movieDatabase));
+  const [ movieCatalog, setMovieCatalog ] = useState<any>();
   const [ searchValue, setSearchValue ] = useState<string>('');
   const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre'>('all');
   const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
@@ -28,32 +29,32 @@ const Home: React.FC = () => {
   const [movieDetailsEditState, setMovieDetailsEditState] = useState<boolean>(true);
   const [movieRating, setMovieRating] = useState(0);
 
-  const searchMovieCatalog = ( searchValue: string | undefined ) => {
-    const movieCatalogCopy = movieDatabase.slice();
+  const searchMovieCatalog = async ( catalog: any, searchValue: string | undefined ) => {
+    const movieCatalogCopy = catalog;
 
     if ( searchValue?.length !== 0 ) {
-      const movieCatalogFiltered = movieCatalogCopy.filter((obj) => {
+      const movieCatalogFiltered = movieCatalogCopy.filter((obj: any) => {
         return obj.name.toLowerCase().includes(searchValue!.toLowerCase());
       });
 
       setMovieCatalog(movieCatalogFiltered);
     } else {
-      sortMovieCatalog(sortValue);
+      sortMovieCatalog(catalog, sortValue);
     }
     
   };
 
-  const sortMovieCatalog = (value: 'all' | 'up' | 'down' | 'genre') => {
-    const movieCatalogCopy = movieDatabase.slice();
+  const sortMovieCatalog = async (catalog: any, value: 'all' | 'up' | 'down' | 'genre') => {
+    const movieCatalogCopy = catalog;
 
     if ( value === 'up' ) {
-      const movieCatalogSorted = movieCatalogCopy.sort((a,b) => a.name > b.name ? 1 : -1);
+      const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name > b.name ? 1 : -1);
       setMovieCatalog(movieCatalogSorted);
     } else if ( value === 'down' ) {
-      const movieCatalogSorted = movieCatalogCopy.sort((a,b) => a.name < b.name ? 1 : -1);
+      const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name < b.name ? 1 : -1);
       setMovieCatalog(movieCatalogSorted);
     } else {
-      setMovieCatalog(reverseMovieCatalog(movieCatalog));
+      MovieDataFetch(setMovieCatalog);
     }
 
   };
@@ -65,15 +66,18 @@ const Home: React.FC = () => {
 
   const onMovieDetailsModalDismiss = () => {
     setShowMovieDetailState(-1);
+    setMovieDetailsEditState(true);
     setShowMovieDetailsModal(false);
   }
   
   useEffect(()=>{
-    searchMovieCatalog(searchValue);
+    if (movieCatalog)
+      searchMovieCatalog(movieCatalog.slice(), searchValue);
   }, [ searchValue ] );
     
   useEffect(() => {
-    sortMovieCatalog(sortValue);
+    if (movieCatalog)
+      sortMovieCatalog(movieCatalog.slice(), sortValue);
   }, [ sortValue ] );
 
   useEffect(() => {
@@ -82,13 +86,16 @@ const Home: React.FC = () => {
     }
   }, [ showMovieDetailState ] );
   
+  useEffect(()=>{
+    MovieDataFetch(setMovieCatalog);
+  },[ ])
 
   return (
     <IonPage ref={page}>
       <IonHeader mode='md'>
         <ToolBar searchValue={searchValue} setSearchValue={setSearchValue} sortValue={sortValue} setSortValue={setSortValue} />  
       </IonHeader>
-      <IonContent fullscreen>
+      {movieCatalog && movieCatalog.length>0 && <IonContent fullscreen>
         <IonHeader>
           <IonItem className='ion-text-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-film" viewBox="0 0 16 16">
@@ -122,7 +129,7 @@ const Home: React.FC = () => {
           </div>
         )}
 
-      </IonContent>
+      </IonContent>}
     </IonPage>
   );
 };

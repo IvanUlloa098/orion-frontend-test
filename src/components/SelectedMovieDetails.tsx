@@ -1,6 +1,6 @@
-import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonRow, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { close } from 'ionicons/icons';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { close, pencil } from 'ionicons/icons';
+import React, { Dispatch, SetStateAction } from 'react';
 import './SelectedMovieDetails.css'
 import { Rating } from 'react-simple-star-rating'
 
@@ -27,9 +27,18 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                     <IonToolbar>
                         <IonTitle className='ion-padding-top ion-text-center'>Movie Details</IonTitle>
                         <IonButtons slot="end">
-                            <IonButton onClick={props.dismissMovieDetailsModal}>
+                            <IonButton 
+                                className='ion-padding-end' 
+                                fill="outline" 
+                                onClick={() => props.setMovieDetailsEditState(false)}
+                            >
+                                <IonIcon slot='end' icon={pencil}></IonIcon>
+                                Edit Movie
+                            </IonButton>
+                            <IonButton slot='only-icon' onClick={props.dismissMovieDetailsModal}>
                                 <IonIcon icon={close}></IonIcon>
-                                </IonButton>
+                            </IonButton>
+                            
                         </IonButtons>
                     </IonToolbar>
                 </IonHeader>
@@ -41,7 +50,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 <IonItem>
                                     <div className='ion-padding-start'>
                                         <Rating 
-                                            readonly={props.movieDetailsEditState} 
+                                            SVGclassName="inline-block"
+                                            readonly={props.movieDetailsEditState}
                                             allowFraction 
                                             onClick={handleRating} 
                                             initialValue={props.selectedMovie.ratingValue} 

@@ -20,7 +20,3 @@
     width: 100%;
     overflow-y: auto;
 }
-
-.transparent-content {
-    --background: #121212cf !important;
-}

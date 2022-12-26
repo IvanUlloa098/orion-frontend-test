@@ -41,16 +41,13 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                 <div key={index}>
                     <IonTitle className='ion-padding-top'>{genre}</IonTitle>
                     <div className='ion-padding relative flex items-center' >
-                        <IonButton slot='icon-only'  onClick={() => slideContentLeft('slider-'+index)}>
+                        <IonButton className='overflow-button' slot='icon-only'  onClick={() => slideContentLeft('slider-'+index)}>
                             <IonIcon  icon={chevronBack}></IonIcon>
                         </IonButton>
-                        <div id={'slider-'+index} className='w-full h-full overflow-x-scroll scroll whitespace-nowrap scroll-smooth scrollbar' key={index}>                        
+                        <div id={'slider-'+index} className='w-full h-full overflow-x-auto scroll whitespace-nowrap scroll-smooth scrollbar' key={index}>                        
                             {getMovieGivenGenre(genre).map((movie: any) => 
-
-                                <IonCard className='w-[190px] inline-block genrePoster' >
-                                    <img 
-                                    key={movie.id}
-                                                                              
+                                <IonCard key={movie.id} className='w-[190px] inline-block genrePoster' >
+                                    <img                                                                         
                                         src={movie.image} 
                                         alt='movie' 
                                         onClick={() => { props.setShowMovieDetailState(movie.id) }} 
@@ -59,7 +56,7 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                                 
                             )}
                         </div>  
-                        <IonButton slot='icon-only' onClick={() => slideContentRight('slider-'+index)}>
+                        <IonButton className='overflow-button' slot='icon-only' onClick={() => slideContentRight('slider-'+index)}>
                             <IonIcon icon={chevronForward}></IonIcon>
                         </IonButton>                      
                         

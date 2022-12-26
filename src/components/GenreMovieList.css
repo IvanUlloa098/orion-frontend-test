@@ -18,6 +18,7 @@
     .scrollbar::-webkit-scrollbar {
       width: 10px;
       height: 10px;
+      display: none;      
     }
   
     .scrollbar::-webkit-scrollbar-track {
@@ -36,7 +37,7 @@
     }
 }
 
-ion-button {
+.overflow-button {
     --background: #ffffff00;
     width: 46px;
     height: 280px;

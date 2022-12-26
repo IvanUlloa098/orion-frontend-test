@@ -1,0 +1,214 @@
+{
+    "movies": [
+    {
+        "id": 1,
+        "name": "Whiplash",
+        "actor": [           
+            "Miles Teller",
+            "J.K. Simmons",         
+            "Melissa Benoist"
+        ],
+        "ratingValue": 4,
+        "contentRating": "R",
+        "datePublished": "2014-10-15",
+        "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student\u0026apos;s potential.",
+        "director": "Damien Chazelle",
+        "duration": "PT1H46M",
+        "genre": [
+            "Drama",
+            "Music"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BOTA5NDZlZGUtMjAxOS00YTRkLTkwYmMtYWQ0NWEwZDZiNjEzXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
+        "@type": "Movie"
+    },
+    {
+        "id": 2,
+        "name": "Warrior",
+        "actor": [
+              "Tom Hardy",
+              "Nick Nolte",
+              "Joel Edgerton"
+        ],
+        "ratingValue": 4,
+        "contentRating": "PG-13",
+        "datePublished": "2011-09-09",
+        "description": "The youngest son of an alcoholic former boxer returns home, where he\u0026apos;s trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.",
+        "director": "Gavin O\u0026apos;Connor",
+        "duration": "PT2H20M",
+        "genre": [
+            "Action",
+            "Drama",
+            "Sport"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMTk4ODk5MTMyNV5BMl5BanBnXkFtZTcwMDMyNTg0Ng@@._V1_.jpg",
+        "@type": "Movie"
+    },
+    {
+        "id": 3,
+        "name": "WALL·E",
+        "actor": [
+              "Ben Burtt",
+              "Elissa Knight",
+              "Jeff Garlin"
+        ],
+        "ratingValue": 4.5,
+        "contentRating": "G",
+        "datePublished": "2008-06-27",
+        "description": "In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.",
+        "director": "Andrew Stanton",
+        "duration": "PT1H38M",
+        "genre": [
+            "Animation",
+            "Adventure",
+            "Family"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMjExMTg5OTU0NF5BMl5BanBnXkFtZTcwMjMxMzMzMw@@._V1_.jpg",
+        "@type": "Movie"
+    },
+    {
+        "id": 4,
+        "name": "12 Years a Slave",
+        "actor": [
+            "Chiwetel Ejiofor",
+            "Michael Kenneth Williams",
+            "Michael Fassbender"
+        ],
+        "ratingValue": 4,
+        "contentRating": "R",
+        "datePublished": "2013-11-08",
+        "description": "In the antebellum United States, Solomon Northup, a free black man from upstate New York, is abducted and sold into slavery.",
+        "director": "Steve McQueen",
+        "duration": "PT2H14M",
+        "genre": [
+        "Biography",
+        "Drama",
+        "History"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMjExMTEzODkyN15BMl5BanBnXkFtZTcwNTU4NTc4OQ@@._V1_.jpg",
+        "@type": "Movie"   
+    },
+    {
+        "id": 5,
+        "name": "2001: A Space Odyssey",
+        "actor": [
+            "Keir Dullea",
+            "Gary Lockwood",
+            "William Sylvester"
+        ],
+        "ratingValue": 4,
+        "contentRating": "G",
+        "datePublished": "1970-06-24",
+        "description": "After uncovering a mysterious artifact buried beneath the Lunar surface, a spacecraft is sent to Jupiter to find its origins - a spacecraft manned by two men and the supercomputer H.A.L. 9000.",
+        "director": "Stanley Kubrick",
+        "duration": "PT2H29M",
+        "genre": [
+        "Adventure",
+        "Sci-Fi"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMmNlYzRiNDctZWNhMi00MzI4LThkZTctMTUzMmZkMmFmNThmXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+        "@type": "Movie"  
+    },
+    {
+        "id": 6,
+        "name": "Before Sunset",
+        "actor": [
+            "Ethan Hawke",
+            "Julie Delpy",
+            "Vernon Dobtcheff"
+        ],
+        "ratingValue": 4,
+        "contentRating": "R",
+        "datePublished": "2004-07-30",
+        "description": "Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse\u0026apos;s book tour.",
+        "director": "Richard Linklater",
+        "duration": "PT1H20M",
+        "genre": [
+            "Drama",
+            "Romance"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMTQ1MjAwNTM5Ml5BMl5BanBnXkFtZTYwNDM0MTc3._V1_.jpg"
+    },
+    {
+        "id": 7,
+        "name": "Braveheart",
+        "actor": [
+            "Mel Gibson",
+            "Sophie Marceau",
+            "Patrick McGoohan"
+        ],
+        "ratingValue": 4,
+        "contentRating": "R",
+        "datePublished": "1995-05-24",
+        "description": "Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England.",
+        "director": "Mel Gibson",
+        "duration": "PT2H58M",
+        "genre": [
+            "Biography",
+            "Drama",
+            "History"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMzkzMmU0YTYtOWM3My00YzBmLWI0YzctOGYyNTkwMWE5MTJkXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg"
+    },
+    {
+        "id": 8,
+        "name": "Catch Me If You Can",
+        "actor": [
+            "Leonardo DiCaprio",
+            "Tom Hanks",
+            "Christopher Walken"
+        ],
+        "ratingValue": 4,
+        "contentRating": "PG-13",
+        "datePublished": "2002-12-25",
+        "description": "Barely 21 yet, Frank is a skilled forger who has passed as a doctor, lawyer and pilot. FBI agent Carl becomes obsessed with tracking down the con man, who only revels in the pursuit.",
+        "director": "Steven Spielberg",
+        "duration": "PT2H21M",
+        "genre": [
+          "Biography",
+          "Crime",
+          "Drama"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMTY5MzYzNjc5NV5BMl5BanBnXkFtZTYwNTUyNTc2._V1_.jpg"
+    },
+    {
+        "id": 9,
+        "name": "Coco",
+        "actor": [
+            "Anthony Gonzalez",
+            "Gael García Bernal",
+            "Benjamin Bratt"
+        ],
+        "ratingValue": 3.5,
+        "contentRating": "PG",
+        "datePublished": "2017-11-22",
+        "description": "Aspiring musician Miguel, confronted with his family\u0026apos;s ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.",
+        "director": "Lee Unkrich, Adrian Molina",
+        "duration": "PT1H45M",
+        "genre": [
+        "Animation",
+        "Adventure",
+        "Comedy"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BYjQ5NjM0Y2YtNjZkNC00ZDhkLWJjMWItN2QyNzFkMDE3ZjAxXkEyXkFqcGdeQXVyODIxMzk5NjA@._V1_.jpg"
+    },
+    {
+        "id": 10,
+        "name": "Django Unchained",
+        "actor": [
+            "Jamie Foxx",
+            "Christoph Waltz",
+            "Leonardo DiCaprio"
+        ],
+        "ratingValue": 5,
+        "contentRating": "R",
+        "datePublished": "2012-12-25",
+        "description": "With the help of a German bounty-hunter, a freed slave sets out to rescue his wife from a brutal plantation-owner in Mississippi.",
+        "director": "Quentin Tarantino",
+        "duration": "PT2H45M",
+        "genre": [
+        "Drama",
+        "Western"
+        ],
+        "image": "https://m.media-amazon.com/images/M/MV5BMjIyNTQ5NjQ1OV5BMl5BanBnXkFtZTcwODg1MDU4OA@@._V1_.jpg"
+    }
+]}
