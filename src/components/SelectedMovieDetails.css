@@ -20,3 +20,11 @@
     width: 100%;
     overflow-y: auto;
 }
+
+.heart-button-color {
+    background: #2125297e;
+}
+
+.heart-button-color:hover {
+    background: #494f557e;
+}

@@ -1,8 +1,10 @@
 import { IonButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { close, pencil } from 'ionicons/icons';
-import React, { Dispatch, SetStateAction } from 'react';
+import { close, heart, heartOutline, pencil } from 'ionicons/icons';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import './SelectedMovieDetails.css'
 import { Rating } from 'react-simple-star-rating'
+import MovieDataService from '../services/MovieDataManagment/service';
+import movie from '../types/movie';
 
 interface ContainerProps { 
     selectedMovie: any;
@@ -11,12 +13,22 @@ interface ContainerProps {
     setMovieDetailsEditState: Dispatch<SetStateAction<boolean>>;
     rating: number;
     setRating: Dispatch<SetStateAction<number>>;
+    setMovieCatalog: React.Dispatch<any>;
+    setMovieCatalogSearch: React.Dispatch<any>;
 };
 
 const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {    
+    const [ favorite, setFavorite ] = useState(props.selectedMovie?props.selectedMovie.favorite:false);
+    
     const handleRating = (rate: number) => {
         props.setRating(rate)
         console.log(rate)
+    }
+
+    const onFavoriteMovie = () => {
+        props.selectedMovie.favorite = !props.selectedMovie.favorite;
+        setFavorite(props.selectedMovie.favorite);
+        MovieDataService.likeMovie(props.selectedMovie);
     }
 
     return(
@@ -46,7 +58,17 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                     <IonGrid className='ion-padding'>
                         <IonRow>
                             <IonCol className='ion-text-center'>
-                                <IonImg className='detailsPoster' src={props.selectedMovie.image}></IonImg>                                                       
+                                <div className='relative'>
+                                    <IonImg className='w-full detailsPoster' src={props.selectedMovie.image}></IonImg> 
+                                    <button onClick={onFavoriteMovie} className="absolute heart-button-color top-2 right-2 rounded-full  p-2 items-center m-2" >
+                                        <IonIcon  
+                                            className='pt-1'                                          
+                                            icon={favorite? heart: heartOutline}
+                                            size='large'
+                                            color='warning'                                            
+                                        ></IonIcon>
+                                    </button>
+                                </div>                                                                                     
                                 <IonItem>
                                     <div className='ion-padding-start'>
                                         <Rating 
@@ -70,7 +92,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 </IonItem>
                                 <IonItem>
                                     <IonLabel position="stacked">Genre</IonLabel>
-                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.genre[0]}></IonInput>
+                                    <IonInput disabled={props.movieDetailsEditState} value={props.selectedMovie.genre}></IonInput>
                                 </IonItem>
                                 <IonItem>
                                     <IonLabel position="stacked">Release Date</IonLabel>

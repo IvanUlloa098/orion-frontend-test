@@ -12,8 +12,8 @@ interface ContainerProps {
 
 const GenreMovieList: React.FC<ContainerProps> = props => {
     let allMovieGenres: any[] = [];
-    props.movieCatalog.map((movie: any, index: any) => {
-        allMovieGenres = allMovieGenres.concat(movie.genre[0]);
+    props.movieCatalog.map((movie: any) => {
+        allMovieGenres = allMovieGenres.concat(movie.genre);
     });
     
     allMovieGenres = allMovieGenres.filter((item, index) =>{
@@ -21,7 +21,7 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
     })
 
     const getMovieGivenGenre = (genre: any) => {
-        return props.movieCatalog.filter( (obj: any) => obj.genre[0] === genre );
+        return props.movieCatalog.filter( (obj: any) => obj.genre === genre );
     }
 
     const slideContentLeft = (index: string) => {

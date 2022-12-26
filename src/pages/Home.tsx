@@ -6,28 +6,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ToolBar from '../components/ToolBar';
 import GenreMovieList from '../components/GenreMovieList';
 import SelectedMovieDetails from '../components/SelectedMovieDetails';
-import MovieDataFetch from '../services/movieDataFetch/service';
-import saveToJson from '../services/movieDataFetch/test';
+import MovieDataService from '../services/MovieDataManagment/service';
 
 const Home: React.FC = () => {
-  const reverseMovieCatalog = (catalog: any) => {
-    const movieCatalogCopy = catalog;
-
-    const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.id < b.id ? 1 : -1);
-    return movieCatalogSorted;    
-  }
-
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
   
   const [ movieCatalog, setMovieCatalog ] = useState<any>();
+  const [ movieCatalogSearch, setMovieCatalogSearch ] = useState<any>();
   const [ searchValue, setSearchValue ] = useState<string>('');
-  const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre'>('all');
+  const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre' | 'favorites'>('all');
   const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
-  const [presentingElement, setPresentingElement] = useState<HTMLElement | null>(null);
-  const [showMovieDetailsModal, setShowMovieDetailsModal] = useState<boolean>(false);
-  const [movieDetailsEditState, setMovieDetailsEditState] = useState<boolean>(true);
-  const [movieRating, setMovieRating] = useState(0);
+  const [ showMovieDetailsModal, setShowMovieDetailsModal ] = useState<boolean>(false);
+  const [ movieDetailsEditState, setMovieDetailsEditState ] = useState<boolean>(true);
+  const [ movieRating, setMovieRating ] = useState(0);
+  const [ favorite, setFavorite ] = useState();
 
   const searchMovieCatalog = async ( catalog: any, searchValue: string | undefined ) => {
     const movieCatalogCopy = catalog;
@@ -37,31 +30,41 @@ const Home: React.FC = () => {
         return obj.name.toLowerCase().includes(searchValue!.toLowerCase());
       });
 
-      setMovieCatalog(movieCatalogFiltered);
+      setMovieCatalogSearch(movieCatalogFiltered);
     } else {
-      sortMovieCatalog(catalog, sortValue);
+      sortMovieCatalog(movieCatalogCopy, sortValue);
     }
     
   };
 
-  const sortMovieCatalog = async (catalog: any, value: 'all' | 'up' | 'down' | 'genre') => {
+  const sortMovieCatalog = async (catalog: any, value: 'all' | 'up' | 'down' | 'genre' | 'favorites') => {
+    setSearchValue("");
     const movieCatalogCopy = catalog;
+    let movieCatalogSorted: any;
 
-    if ( value === 'up' ) {
-      const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name > b.name ? 1 : -1);
-      setMovieCatalog(movieCatalogSorted);
-    } else if ( value === 'down' ) {
-      const movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name < b.name ? 1 : -1);
-      setMovieCatalog(movieCatalogSorted);
-    } else {
-      MovieDataFetch(setMovieCatalog);
+    switch (value) {
+      case 'up':
+        movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name > b.name ? 1 : -1);
+        setMovieCatalog(movieCatalogSorted);
+        break;
+      case 'down':
+        movieCatalogSorted = movieCatalogCopy.sort((a: any,b: any) => a.name < b.name ? 1 : -1);
+        setMovieCatalog(movieCatalogSorted);
+        break;
+      case 'favorites':
+        movieCatalogSorted = movieCatalog.filter((obj: any) => {return obj.favorite === true})
+        setMovieCatalog(movieCatalogSorted);
+        break;
+      default:
+        MovieDataService.movieDataFetch(setMovieCatalog, setMovieCatalogSearch);
+        break;
     }
 
   };
 
   const dismissMovieDetailsModal = () => {
     modal.current?.dismiss();  
-    onMovieDetailsModalDismiss();  
+    onMovieDetailsModalDismiss();
   }
 
   const onMovieDetailsModalDismiss = () => {
@@ -71,8 +74,9 @@ const Home: React.FC = () => {
   }
   
   useEffect(()=>{
-    if (movieCatalog)
+    if (movieCatalog) {
       searchMovieCatalog(movieCatalog.slice(), searchValue);
+    }
   }, [ searchValue ] );
     
   useEffect(() => {
@@ -87,7 +91,7 @@ const Home: React.FC = () => {
   }, [ showMovieDetailState ] );
   
   useEffect(()=>{
-    MovieDataFetch(setMovieCatalog);
+    MovieDataService.movieDataFetch(setMovieCatalog, setMovieCatalogSearch);
   },[ ])
 
   return (
@@ -105,28 +109,46 @@ const Home: React.FC = () => {
           </IonItem>          
         </IonHeader> 
 
-        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modal} presentingElement={presentingElement!}>
-          <SelectedMovieDetails selectedMovie={
-            movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] 
-          } dismissMovieDetailsModal={dismissMovieDetailsModal} 
+        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modal}>
+          <SelectedMovieDetails 
+            selectedMovie={ movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] } 
+            dismissMovieDetailsModal={dismissMovieDetailsModal} 
             movieDetailsEditState={movieDetailsEditState}
             setMovieDetailsEditState={setMovieDetailsEditState}
             rating={movieRating}
             setRating={setMovieRating}
+            setMovieCatalog={setMovieCatalog}
+            setMovieCatalogSearch={setMovieCatalogSearch}
           ></SelectedMovieDetails>
         </IonModal>
 
-        {(sortValue !== 'genre')  && ( 
+        {(sortValue !== 'genre' &&
+          sortValue !== 'favorites' &&
+         !searchValue)  && ( 
           <IonGrid fixed={true} >
             <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
             <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
           </IonGrid>       
         )}
 
-        {(sortValue === 'genre') && (     
+        {(sortValue === 'genre' && !searchValue) && (     
           <div className='container-fluid'>     
             <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>                     
           </div>
+        )}
+
+        {(sortValue === 'favorites')  && ( 
+          <IonGrid fixed={true} >
+            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+            <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
+          </IonGrid>       
+        )}
+
+        {(searchValue)  && ( 
+          <IonGrid fixed={true} >
+            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+            <AllMovieList movieCatalog={movieCatalogSearch} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
+          </IonGrid>       
         )}
 
       </IonContent>}

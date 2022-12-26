@@ -5,18 +5,30 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 interface ContainerProps { 
     searchValue: string; 
     setSearchValue: Dispatch<SetStateAction<string>>; 
-    sortValue: 'all' | 'up' | 'down' | 'genre' ; 
-    setSortValue: Dispatch<SetStateAction<'all' | 'up' | 'down' | 'genre'>>; 
+    sortValue: 'all' | 'up' | 'down' | 'genre' | 'favorites' ; 
+    setSortValue: Dispatch<SetStateAction<'all' | 'up' | 'down' | 'genre' | 'favorites'>>; 
 };
 
 const ToolBar: React.FC<ContainerProps> = props => {
-    const [popoverState, setShowPopover] = useState({
+    const [ switchFavorites, setSwitchFavorites ] = useState(true);
+    const [ popoverState, setShowPopover ] = useState({
         showPopover: false,
         event: undefined,
     });
 
-    const onSortValueSelected = (value: 'all' | 'up' | 'down' | 'genre') => {
-        props.setSortValue(value)
+    const onSortValueSelected = (value: 'all' | 'up' | 'down' | 'genre' | 'favorites') => {
+        setSwitchFavorites(true);
+        props.setSortValue(value);
+    };
+
+    const onSortValueSelectedFavorites = () => {
+        setSwitchFavorites(!switchFavorites);
+        if (switchFavorites){
+            props.setSortValue('favorites');
+        } else {
+            props.setSortValue('all');
+        }
+        
     };
     
     return (
@@ -68,14 +80,18 @@ const ToolBar: React.FC<ContainerProps> = props => {
                         <IonIcon slot='start' icon={filter} />  
                         Sort                         
                     </IonButton>                   
-                    <IonButton>
+                    <IonButton onClick={onSortValueSelectedFavorites}>
                         <IonIcon slot='start' icon={heart} />
-                        Favorites
+                        {switchFavorites?'Favorites':'  All  '}
                     </IonButton>
                 </IonButtons>
-            <IonSearchbar value={props.searchValue} onIonChange={
-                (event) => props.setSearchValue(event.detail.value!)
-            } showClearButton="focus" placeholder="Search for your movie"></IonSearchbar>
+                <IonSearchbar 
+                    debounce={500}
+                    value={props.searchValue} 
+                    onIonChange={(event) => props.setSearchValue(event.detail.value!)}   
+                    showClearButton="focus" 
+                    placeholder="Search for your movie"
+                ></IonSearchbar>
             </IonToolbar>
         </>
     );
