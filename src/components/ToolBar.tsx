@@ -82,7 +82,7 @@ const ToolBar: React.FC<ContainerProps> = props => {
                     </IonButton>                   
                     <IonButton onClick={onSortValueSelectedFavorites}>
                         <IonIcon slot='start' icon={heart} />
-                        {switchFavorites?'Favorites':'  All  '}
+                        {switchFavorites?'Favorites':'All'}
                     </IonButton>
                 </IonButtons>
                 <IonSearchbar 

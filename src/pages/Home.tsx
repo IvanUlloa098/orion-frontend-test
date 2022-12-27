@@ -13,14 +13,13 @@ const Home: React.FC = () => {
   const page = useRef(null);
   
   const [ movieCatalog, setMovieCatalog ] = useState<any>();
+  const [ fetchCall, setFetchCall ] = useState<boolean>(true);
   const [ movieCatalogSearch, setMovieCatalogSearch ] = useState<any>();
   const [ searchValue, setSearchValue ] = useState<string>('');
   const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre' | 'favorites'>('all');
   const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
   const [ showMovieDetailsModal, setShowMovieDetailsModal ] = useState<boolean>(false);
   const [ movieDetailsEditState, setMovieDetailsEditState ] = useState<boolean>(true);
-  const [ movieRating, setMovieRating ] = useState(0);
-  const [ favorite, setFavorite ] = useState();
 
   const searchMovieCatalog = async ( catalog: any, searchValue: string | undefined ) => {
     const movieCatalogCopy = catalog;
@@ -56,14 +55,19 @@ const Home: React.FC = () => {
         setMovieCatalog(movieCatalogSorted);
         break;
       default:
-        MovieDataService.movieDataFetch(setMovieCatalog, setMovieCatalogSearch);
+        MovieDataService.movieDataFetch()
+          .then(function(myJson) {
+            setMovieCatalog(myJson);
+            setMovieCatalogSearch(myJson);
+          });
         break;
     }
 
   };
 
   const dismissMovieDetailsModal = () => {
-    modal.current?.dismiss();  
+    modal.current?.dismiss();
+    setFetchCall(!fetchCall);
     onMovieDetailsModalDismiss();
   }
 
@@ -91,8 +95,27 @@ const Home: React.FC = () => {
   }, [ showMovieDetailState ] );
   
   useEffect(()=>{
-    MovieDataService.movieDataFetch(setMovieCatalog, setMovieCatalogSearch);
-  },[ ])
+    const fetchData = async () => {
+      await MovieDataService.movieDataFetch()
+        .then(function(myJson) {
+          setMovieCatalogSearch(myJson);
+          
+          switch (sortValue) {
+            case 'up':
+              setMovieCatalog(myJson.sort((a: any,b: any) => a.name > b.name ? 1 : -1));
+              break;
+            case 'down':
+              setMovieCatalog(myJson.sort((a: any,b: any) => a.name < b.name ? 1 : -1));
+              break;
+            default:
+              setMovieCatalog(myJson);
+              break;
+          }
+        });      
+    }
+
+    fetchData().catch(console.error);    
+  },[ fetchCall ]);
 
   return (
     <IonPage ref={page}>
@@ -107,7 +130,7 @@ const Home: React.FC = () => {
             </svg>
             <IonTitle>Movie Catalog</IonTitle>
           </IonItem>          
-        </IonHeader> 
+        </IonHeader>
 
         <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modal}>
           <SelectedMovieDetails 
@@ -115,8 +138,6 @@ const Home: React.FC = () => {
             dismissMovieDetailsModal={dismissMovieDetailsModal} 
             movieDetailsEditState={movieDetailsEditState}
             setMovieDetailsEditState={setMovieDetailsEditState}
-            rating={movieRating}
-            setRating={setMovieRating}
             setMovieCatalog={setMovieCatalog}
             setMovieCatalogSearch={setMovieCatalogSearch}
           ></SelectedMovieDetails>

@@ -2,9 +2,9 @@ import React from 'react';
 
 const api_url: string = 'http://localhost:3000/movies';
 
-const movieDataFetch = (setMovieCatalog: React.Dispatch<any>, setMovieCatalogSearch: React.Dispatch<any>)=>{
+const movieDataFetch = async ()=>{
     
-  fetch(api_url
+  return fetch(api_url
     ,{
       headers : { 
         'Content-Type': 'application/json',
@@ -14,11 +14,8 @@ const movieDataFetch = (setMovieCatalog: React.Dispatch<any>, setMovieCatalogSea
     )
       .then(function(response){        
         return response.json();
-      })
-      .then(function(myJson) {
-        setMovieCatalog(myJson);
-        setMovieCatalogSearch(myJson);
       });
+      
   
 }
 
@@ -41,7 +38,7 @@ const movieDataFetchAlternate = (setMovieCatalog: React.Dispatch<any>)=>{
   
 }
 
-const likeMovie=(data: any) => {
+const updateMovie=(data: any) => {
   const requestOptions = {
       method: 'PUT',
       headers: { 
@@ -56,7 +53,7 @@ const likeMovie=(data: any) => {
 
 const MovieDataService = {
   movieDataFetch,
-  likeMovie,
+  updateMovie,
   movieDataFetchAlternate
 }
 

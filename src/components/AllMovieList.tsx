@@ -18,7 +18,7 @@ const AllMovieList: React.FC<ContainerProps> = props => {
                         onClick={() => { props.setShowMovieDetailState(movie.id) }} 
                         className='moviePoster'
                     >
-                        <img  src={movie.image} alt='movie' ></img>
+                        <img  src={movie.image? movie.image: 'assets/img/no-poster.jpeg'} alt='movie' ></img>
                     </IonCard>        
                 </IonCol>
             )}
