@@ -1,5 +1,5 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonNote, IonPopover, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { close, save } from 'ionicons/icons';
+import { addCircle, close} from 'ionicons/icons';
 import React, { useRef, useState } from 'react';
 import movie from '../types/movie';
 import './SelectedMovieDetails.css'
@@ -11,12 +11,13 @@ interface ContainerProps {
 
 const CreateNewMovie: React.FC<ContainerProps> = (props) => { 
     const movie = {} as movie;
-    const validInput = Array(6).fill(true);
+    const validInput = Array(6).fill(null);
     movie.actor = ['', '', ''];
     
     const [showAlert, setShowAlert] = useState(false);
+    const [showCreateAlert, setShowCreateAlert] = useState(false);
     const [ datePublished, setDatePublished ] = useState('');
-    const [ notSaved, setNotSaved ] = useState(false);
+    const [ notSaved, setNotSaved ] = useState(true);
     const [isValid, setIsValid] = useState<boolean[]>(validInput);
     const [movieCreated, setMovieCreated] = useState<movie>(movie);
     
@@ -40,7 +41,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         const actors = [
             actor1InputRef.current?.value+'',
             actor2InputRef.current?.value+'',
-            actor1InputRef.current?.value+''
+            actor3InputRef.current?.value+''
         ]
 
         movie.name = tittleInputRef.current?.value?tittleInputRef.current?.value.toString():'';
@@ -55,22 +56,28 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         prepareData();  
         validate() 
         setMovieCreated(movie);
-         
-        MovieDataService.newEntry(movieCreated);          
+
+        if(validInput.filter((x) => x === true).length === 6)
+            MovieDataService.newEntry(movieCreated);   
+            setShowCreateAlert(true);       
     };
 
     const validate = () => {
         const movieCopy = movie;
+        const validInputCopy = validInput;
+
         Object.entries(movieCopy).forEach(([key, value], index) => {
-            validInput[index] = value==='undefined' || value===''?false:true; 
+            validInputCopy[index] = value==='undefined' || value===''?false:true; 
         });
 
-        movieCopy.actor.filter(x => x === '').length < 3? validInput[0]=true: validInput[0]=false;
-        setIsValid(validInput.slice());
+        const expression = movieCopy.actor.filter(x => x !== '' || x === undefined).length;
+        validInputCopy[0] = expression>0 && expression<=3
+        setIsValid(validInputCopy.slice());
     };
 
     const onExitDetails = () => {
         prepareData();
+        setMovieCreated(movie);
         setShowAlert(true);
     };
 
@@ -85,8 +92,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 form='create-movie-form'
                                 type="submit"
                             >
-                                <IonIcon slot='end' icon={save}></IonIcon>
-                                Save
+                                <IonIcon slot='end' icon={addCircle}></IonIcon>
+                                Create
                             </IonButton>                            
                         </IonButtons>                       
                     <IonButtons slot="end">                            
@@ -107,14 +114,25 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 text: 'Discard',
                                 role: 'confirm',
                                 handler: () => {
-                                    
+                                    props.dismissCreateMovieModal();
                                 },
                             },
                             {
-                                text:'Save and Dismiss',
-                                role: 'cancel',
+                                text:'Cancel',
+                                role: 'cancel'
+                            }]}
+                />   
+                <IonAlert
+                    isOpen={showCreateAlert}
+                    onDidDismiss={() => setShowCreateAlert(false)}
+                    header="Movie created"
+                    message="Your new movie has been added to your catalog"
+                    buttons={[
+                            {
+                                text: 'OK',
+                                role: 'confirm',
                                 handler: () => {
-                                    submit();                                        
+                                    props.dismissCreateMovieModal();
                                 },
                             }]}
                 />   

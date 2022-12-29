@@ -162,7 +162,7 @@ const Home: React.FC = () => {
           ></SelectedMovieDetails>
         </IonModal>
         
-        <IonModal id="create-modal" isOpen={showCreateMovieModal} ref={modalCreateMovie}>
+        <IonModal backdropDismiss={false} id="create-modal" isOpen={showCreateMovieModal} ref={modalCreateMovie}>
           <CreateNewMovie
             dismissCreateMovieModal={dismissCreateMovieModal}            
           ></CreateNewMovie>

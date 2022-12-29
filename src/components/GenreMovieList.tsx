@@ -48,7 +48,7 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                             {getMovieGivenGenre(genre).map((movie: any) => 
                                 <IonCard key={movie.id} className='w-[190px] inline-block genrePoster' >
                                     <img                                                                         
-                                        src={movie.image} 
+                                        src={movie.image?movie.image:'assets/img/no-poster.jpeg'} 
                                         alt='movie' 
                                         onClick={() => { props.setShowMovieDetailState(movie.id) }} 
                                     />
