@@ -117,6 +117,9 @@ const Home: React.FC = () => {
             case 'down':
               setMovieCatalog(myJson.sort((a: any,b: any) => a.name < b.name ? 1 : -1));
               break;
+            case 'favorites':
+              setMovieCatalog(myJson.filter((obj: any) => {return obj.favorite === true}));
+              break;
             default:
               setMovieCatalog(myJson);
               break;

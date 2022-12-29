@@ -1,6 +1,6 @@
-import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonNote, IonPopover, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { addCircle, close} from 'ionicons/icons';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import movie from '../types/movie';
 import './SelectedMovieDetails.css'
 import MovieDataService from '../services/MovieDataManagment/service';
@@ -20,10 +20,10 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     const [ notSaved, setNotSaved ] = useState(true);
     const [isValid, setIsValid] = useState<boolean[]>(validInput);
     const [movieCreated, setMovieCreated] = useState<movie>(movie);
+    const [ movieGenreSelected, setMovieGenreSelected ] = useState<string>('');
     
     const tittleInputRef = useRef<HTMLIonInputElement>(null);
     const directorInputRef = useRef<HTMLIonInputElement>(null);
-    const genreInputRef = useRef<HTMLIonInputElement>(null);
     const dateInputRef = useRef<HTMLIonInputElement>(null);
     const actor1InputRef = useRef<HTMLIonInputElement>(null);
     const actor2InputRef = useRef<HTMLIonInputElement>(null);
@@ -38,28 +38,25 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     }
 
     const prepareData = () => {
-        const actors = [
-            actor1InputRef.current?.value+'',
-            actor2InputRef.current?.value+'',
-            actor3InputRef.current?.value+''
-        ]
-
         movie.name = tittleInputRef.current?.value?tittleInputRef.current?.value.toString():'';
         movie.director = directorInputRef.current?.value?directorInputRef.current?.value.toString():'';
-        movie.genre = genreInputRef.current?.value?genreInputRef.current?.value.toString():'';
+        movie.genre = movieGenreSelected;
         movie.datePublished = dateInputRef.current?.value?dateInputRef.current?.value.toString():'';
         movie.description = descriptionInputRef.current?.value?descriptionInputRef.current?.value.toString():'';
-        movie.actor = actors;
+        movie.actor[0] = actor1InputRef.current?.value+'';
+        movie.actor[1] = actor2InputRef.current?.value+'';
+        movie.actor[2] = actor3InputRef.current?.value+'';
     }
 
     const submit = async () => {
         prepareData();  
-        validate() 
+        validate();
         setMovieCreated(movie);
 
-        if(validInput.filter((x) => x === true).length === 6)
+        if(validInput.filter((x) => x === true).length === 6){
             MovieDataService.newEntry(movieCreated);   
-            setShowCreateAlert(true);       
+            setShowCreateAlert(true);  
+        }     
     };
 
     const validate = () => {
@@ -69,9 +66,11 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         Object.entries(movieCopy).forEach(([key, value], index) => {
             validInputCopy[index] = value==='undefined' || value===''?false:true; 
         });
-
+        
         const expression = movieCopy.actor.filter(x => x !== '' || x === undefined).length;
         validInputCopy[0] = expression>0 && expression<=3
+        validInput[3]=movieGenreSelected?true:false;
+
         setIsValid(validInputCopy.slice());
     };
 
@@ -156,11 +155,31 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                     <IonInput value={movieCreated.director} ref={directorInputRef } placeholder={'Director...'}></IonInput>
                                     <IonNote slot="error">This field is required</IonNote>
                                 </IonItem>
-                                <IonItem  className={`${isValid[3] && 'ion-valid'} ${isValid[3] === false && 'ion-invalid'}`}>
-                                    <IonLabel position="stacked">Genre</IonLabel>
-                                    <IonInput value={movieCreated.genre} ref={genreInputRef} placeholder={'Genre...'}></IonInput>
-                                    <IonNote slot="error">This field is required</IonNote>
-                                </IonItem>
+                                <IonList>
+                                    <IonItem  className={`${isValid[3] && 'ion-valid'} ${isValid[3] === false && 'ion-invalid'}`}>
+                                        <IonLabel position="stacked">Genre</IonLabel>
+                                        <IonSelect 
+                                            interface="popover" 
+                                            placeholder="Select genre"
+                                            onIonChange={(e) => setMovieGenreSelected(e.target.value)}
+                                            onClick={() => {prepareData(); setMovieCreated(movie);}}
+                                        >
+                                            <IonSelectOption value="Action">Action</IonSelectOption>
+                                            <IonSelectOption value="Adventure">Adventure</IonSelectOption>
+                                            <IonSelectOption value="Biography">Biography</IonSelectOption>
+                                            <IonSelectOption value="Comedy">Comedy</IonSelectOption>
+                                            <IonSelectOption value="Crime">Crime</IonSelectOption>
+                                            <IonSelectOption value="Documentary">Documentary</IonSelectOption>
+                                            <IonSelectOption value="Drama">Drama</IonSelectOption>
+                                            <IonSelectOption value="Family">Family</IonSelectOption>
+                                            <IonSelectOption value="Fantasy">Fantasy</IonSelectOption>
+                                            <IonSelectOption value="Animation">Horror</IonSelectOption>
+                                            <IonSelectOption value="Animation">Sci-Fi</IonSelectOption>
+                                            <IonSelectOption value="Animation">Thriller</IonSelectOption>
+                                        </IonSelect>
+                                        <IonNote slot="error">This field is required</IonNote>
+                                    </IonItem>
+                                </IonList>                                
                                 <IonItem className={`${isValid[4] && 'ion-valid'} ${isValid[4] === false && 'ion-invalid'}`}>
                                     <IonLabel position="stacked">Release Date</IonLabel>
                                     <IonInput

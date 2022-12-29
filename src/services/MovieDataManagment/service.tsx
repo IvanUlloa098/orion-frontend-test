@@ -39,10 +39,10 @@ const newEntry = (data: any) => {
       'Accept': 'application/json', 
       'Content-Type': 'application/json' 
     },
-    body: JSON.stringify(data)
-};
-fetch(api_url, requestOptions)
-    .then(response => response.json());
+      body: JSON.stringify(data)
+  };
+  fetch(api_url, requestOptions)
+      .then(response => response.json());
 }
 
 const MovieDataService = {
