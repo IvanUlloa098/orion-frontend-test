@@ -1,0 +1,30 @@
+.detailsPoster {
+    height: auto;
+    width: 100%;
+}
+
+.descriptionLayout {
+    --min-height: 405px;
+    vertical-align: top;
+}
+
+.ion-col-description {
+    vertical-align: top;
+}
+
+.ion-content-scroll-host {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.heart-button-color {
+    background: #2125297e;
+}
+
+.heart-button-color:hover {
+    background: #494f557e;
+}

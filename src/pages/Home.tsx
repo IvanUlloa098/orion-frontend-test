@@ -1,4 +1,4 @@
-import { IonContent, IonGrid, IonHeader, IonItem, IonModal, IonPage, IonTitle } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import './Home.css';
 import AllMovieList from '../components/AllMovieList';
@@ -7,9 +7,12 @@ import ToolBar from '../components/ToolBar';
 import GenreMovieList from '../components/GenreMovieList';
 import SelectedMovieDetails from '../components/SelectedMovieDetails';
 import MovieDataService from '../services/MovieDataManagment/service';
+import { add } from 'ionicons/icons';
+import CreateNewMovie from '../components/CreateNewMovie';
 
 const Home: React.FC = () => {
-  const modal = useRef<HTMLIonModalElement>(null);
+  const modalMovieDetails = useRef<HTMLIonModalElement>(null);
+  const modalCreateMovie = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
   
   const [ movieCatalog, setMovieCatalog ] = useState<any>();
@@ -19,6 +22,7 @@ const Home: React.FC = () => {
   const [ sortValue, setSortValue ] = useState<'all' | 'up' | 'down' | 'genre' | 'favorites'>('all');
   const [ showMovieDetailState, setShowMovieDetailState ] = useState<number>(-1);
   const [ showMovieDetailsModal, setShowMovieDetailsModal ] = useState<boolean>(false);
+  const [ showCreateMovieModal, setShowCreateMovieModal ] = useState<boolean>(false);
   const [ movieDetailsEditState, setMovieDetailsEditState ] = useState<boolean>(true);
 
   const searchMovieCatalog = async ( catalog: any, searchValue: string | undefined ) => {
@@ -66,9 +70,15 @@ const Home: React.FC = () => {
   };
 
   const dismissMovieDetailsModal = () => {
-    modal.current?.dismiss();
+    modalMovieDetails.current?.dismiss();
     setFetchCall(!fetchCall);
     onMovieDetailsModalDismiss();
+  }
+
+  const dismissCreateMovieModal = () => {
+    modalCreateMovie.current?.dismiss();
+    setFetchCall(!fetchCall);
+    setShowCreateMovieModal(false);
   }
 
   const onMovieDetailsModalDismiss = () => {
@@ -122,6 +132,7 @@ const Home: React.FC = () => {
       <IonHeader mode='md'>
         <ToolBar searchValue={searchValue} setSearchValue={setSearchValue} sortValue={sortValue} setSortValue={setSortValue} />  
       </IonHeader>
+
       {movieCatalog && movieCatalog.length>0 && <IonContent fullscreen>
         <IonHeader>
           <IonItem className='ion-text-center'>
@@ -129,18 +140,32 @@ const Home: React.FC = () => {
               <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
             </svg>
             <IonTitle>Movie Catalog</IonTitle>
-          </IonItem>          
+            <IonButtons slot='end'>
+              <IonButton
+                fill="solid"
+                color='primary'
+                onClick={() => setShowCreateMovieModal(true)}
+              >
+                <IonIcon slot='start' icon={add}></IonIcon>
+                New Movie
+              </IonButton>
+            </IonButtons>         
+          </IonItem>   
         </IonHeader>
 
-        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modal}>
+        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modalMovieDetails}>
           <SelectedMovieDetails 
             selectedMovie={ movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] } 
             dismissMovieDetailsModal={dismissMovieDetailsModal} 
             movieDetailsEditState={movieDetailsEditState}
             setMovieDetailsEditState={setMovieDetailsEditState}
-            setMovieCatalog={setMovieCatalog}
-            setMovieCatalogSearch={setMovieCatalogSearch}
           ></SelectedMovieDetails>
+        </IonModal>
+        
+        <IonModal id="create-modal" isOpen={showCreateMovieModal} ref={modalCreateMovie}>
+          <CreateNewMovie
+            dismissCreateMovieModal={dismissCreateMovieModal}            
+          ></CreateNewMovie>
         </IonModal>
 
         {(sortValue !== 'genre' &&

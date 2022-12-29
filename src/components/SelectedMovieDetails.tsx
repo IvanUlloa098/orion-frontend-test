@@ -1,5 +1,5 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonPopover, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { close, heart, heartOutline, pencil, save, trash } from 'ionicons/icons';
+import { close, create, heart, heartOutline, save, trash } from 'ionicons/icons';
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import './SelectedMovieDetails.css'
 import { Rating } from 'react-simple-star-rating'
@@ -10,8 +10,6 @@ interface ContainerProps {
     dismissMovieDetailsModal: () => void;
     movieDetailsEditState: boolean;
     setMovieDetailsEditState: Dispatch<SetStateAction<boolean>>;
-    setMovieCatalog: React.Dispatch<any>;
-    setMovieCatalogSearch: React.Dispatch<any>;
 };
 
 const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {  
@@ -112,7 +110,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 fill="outline" 
                                 onClick={onEditClick}
                             >
-                                <IonIcon slot='end' icon={pencil}></IonIcon>
+                                <IonIcon slot='end' icon={create}></IonIcon>
                                 Edit
                             </IonButton>)}                                                 
                         </IonButtons>
@@ -150,7 +148,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                         <IonRow>
                             <IonCol className='ion-text-center'>
                                 <div className='relative'>
-                                    <IonImg className='w-full detailsPoster' src={props.selectedMovie.image}></IonImg> 
+                                    <IonImg className='w-full detailsPoster' src={props.selectedMovie.image?props.selectedMovie.image:'assets/img/no-poster.jpeg'}></IonImg> 
                                     <button onClick={onFavoriteMovie} className="absolute heart-button-color top-2 right-2 rounded-full  p-2 items-center m-2" >
                                         <IonIcon  
                                             className='pt-1'                                          
@@ -228,7 +226,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 <IonItem counter={true} className='descriptionLayout'>
                                     <IonLabel position="stacked" >Description</IonLabel>                                    
                                     <IonTextarea
-                                        onIonChange={handleInputChange}
+                                        onIonInput={handleInputChange}
                                         ref={descriptionInputRef}
                                         rows={13}
                                         className='textfieldHeight'
