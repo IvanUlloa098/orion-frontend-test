@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonPopover, IonRow, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { close, create, heart, heartOutline, save, trash } from 'ionicons/icons';
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import './SelectedMovieDetails.css'
@@ -14,14 +14,15 @@ interface ContainerProps {
 
 const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {  
     const [ switchEdit, setSwitchEdit ] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);  
+    const [showAlertClose, setShowAlertClose] = useState(false);  
+    const [showAlertDeletion, setShowAlertDeletion] = useState(false);
     const [ favorite, setFavorite ] = useState(props.selectedMovie?props.selectedMovie.favorite:false);
     const [ rating, setRating ] = useState(props.selectedMovie?props.selectedMovie.ratingValue:0);
     const [ datePublished, setDatePublished ] = useState(props.selectedMovie?props.selectedMovie.datePublished:'');
+    const [ movieGenreSelected, setMovieGenreSelected ] = useState<string>(props.selectedMovie?props.selectedMovie.genre:'');
     
     const tittleInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.title:'');
     const directorInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.director:'');
-    const genreInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.genre:'');
     const dateInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.datePublished:'');
     const actor1InputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.actor[0]:'');
     const actor2InputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.actor[1]:'');
@@ -53,12 +54,12 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         const actors = [
             actor1InputRef.current.value,
             actor2InputRef.current.value,
-            actor1InputRef.current.value
+            actor3InputRef.current.value
         ]
 
         props.selectedMovie.name = tittleInputRef.current.value;
         props.selectedMovie.director = directorInputRef.current.value;
-        props.selectedMovie.genre = genreInputRef.current.value;
+        props.selectedMovie.genre = movieGenreSelected;
         props.selectedMovie.datePublished = dateInputRef.current.value;
         props.selectedMovie.actor = actors;
         props.selectedMovie.description = descriptionInputRef.current.value;
@@ -76,10 +77,20 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         setSwitchEdit(true);
     };
 
+    const handleInputChangeGenre = (evt: string) => {
+        setSwitchEdit(true);
+        setMovieGenreSelected(evt);
+    };
+
     const onExitDetails = () => {
         prepareData();
-        setShowAlert(true);
+        setShowAlertClose(true);
     };
+
+    const onConfirmDeletion = () => {
+        MovieDataService.deleteMovie(props.selectedMovie);
+        props.dismissMovieDetailsModal();
+    }
 
     return(
         <>
@@ -92,7 +103,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                             <IonButton 
                                 className='ion-padding-start' 
                                 fill="outline" 
-                                onClick={() => {}}
+                                onClick={() => setShowAlertDeletion(true)}
                                 color='danger'
                             >
                                 <IonIcon slot='end' icon={trash}></IonIcon>
@@ -123,8 +134,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                 </IonHeader>
                 <IonContent>     
                     <IonAlert
-                        isOpen={showAlert}
-                        onDidDismiss={() => setShowAlert(false)}
+                        isOpen={showAlertClose}
+                        onDidDismiss={() => setShowAlertClose(false)}
                         header="Alert"
                         message="There are unsaved changes"
                         buttons={[
@@ -136,14 +147,30 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                     },
                                 },
                                 {
-                                    text:'Save and Dismiss',
+                                    text:'Save and Close',
                                     role: 'cancel',
                                     handler: () => {
                                         saveEdit();
                                         props.dismissMovieDetailsModal();
                                     },
                                 }]}
-                    />               
+                    />  
+                    <IonAlert
+                        isOpen={showAlertDeletion}
+                        onDidDismiss={() => setShowAlertDeletion(false)}
+                        header="Delete movie"
+                        message="Delete this movie from your catalog?"
+                        buttons={[
+                                {
+                                    text: 'Comfirm',
+                                    role: 'confirm',
+                                    handler: onConfirmDeletion,
+                                },
+                                {
+                                    text:'Cancel',
+                                    role: 'cancel'
+                                }]}
+                    />                            
                     <IonGrid className='ion-padding'>
                         <IonRow>
                             <IonCol className='ion-text-center'>
@@ -189,15 +216,23 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                         onIonChange={handleInputChange}
                                     ></IonInput>
                                 </IonItem>
-                                <IonItem>
-                                    <IonLabel position="stacked">Genre</IonLabel>
-                                    <IonInput 
-                                        disabled={props.movieDetailsEditState} 
-                                        ref={genreInputRef} 
-                                        value={props.selectedMovie.genre}
-                                        onIonChange={handleInputChange}
-                                    ></IonInput>
-                                </IonItem>
+                                <IonList>
+                                    <IonItem>
+                                        <IonLabel position="stacked">Genre</IonLabel>
+                                        <IonSelect
+                                            interface="popover" 
+                                            placeholder="Select genre"
+                                            value={movieGenreSelected}
+                                            disabled={props.movieDetailsEditState}
+                                            onIonChange={(e) => handleInputChangeGenre(e.target.value)}
+                                            onClick={() => prepareData()}
+                                        >
+                                            {MovieDataService.getMovieGenres().map((genre, index)=> 
+                                                <IonSelectOption key={index} value={genre}>{genre}</IonSelectOption>
+                                            )}                                            
+                                        </IonSelect>
+                                    </IonItem>
+                                </IonList>    
                                 <IonItem>
                                     <IonLabel position="stacked">Release Date</IonLabel>
                                     <IonInput 

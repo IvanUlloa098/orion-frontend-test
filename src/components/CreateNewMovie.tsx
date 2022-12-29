@@ -1,6 +1,6 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { addCircle, close} from 'ionicons/icons';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import movie from '../types/movie';
 import './SelectedMovieDetails.css'
 import MovieDataService from '../services/MovieDataManagment/service';
@@ -54,7 +54,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         setMovieCreated(movie);
 
         if(validInput.filter((x) => x === true).length === 6){
-            MovieDataService.newEntry(movieCreated);   
+            MovieDataService.newEntry(movie);   
             setShowCreateAlert(true);  
         }     
     };
@@ -164,18 +164,9 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                             onIonChange={(e) => setMovieGenreSelected(e.target.value)}
                                             onClick={() => {prepareData(); setMovieCreated(movie);}}
                                         >
-                                            <IonSelectOption value="Action">Action</IonSelectOption>
-                                            <IonSelectOption value="Adventure">Adventure</IonSelectOption>
-                                            <IonSelectOption value="Biography">Biography</IonSelectOption>
-                                            <IonSelectOption value="Comedy">Comedy</IonSelectOption>
-                                            <IonSelectOption value="Crime">Crime</IonSelectOption>
-                                            <IonSelectOption value="Documentary">Documentary</IonSelectOption>
-                                            <IonSelectOption value="Drama">Drama</IonSelectOption>
-                                            <IonSelectOption value="Family">Family</IonSelectOption>
-                                            <IonSelectOption value="Fantasy">Fantasy</IonSelectOption>
-                                            <IonSelectOption value="Animation">Horror</IonSelectOption>
-                                            <IonSelectOption value="Animation">Sci-Fi</IonSelectOption>
-                                            <IonSelectOption value="Animation">Thriller</IonSelectOption>
+                                            {MovieDataService.getMovieGenres().map((genre, index)=> 
+                                                <IonSelectOption key={index} value={genre}>{genre}</IonSelectOption>
+                                            )}                                            
                                         </IonSelect>
                                         <IonNote slot="error">This field is required</IonNote>
                                     </IonItem>
