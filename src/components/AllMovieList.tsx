@@ -19,6 +19,11 @@ const AllMovieList: React.FC<ContainerProps> = props => {
                         className='moviePoster'
                     >
                         <img  src={movie.image? movie.image: 'assets/img/no-poster.jpeg'} alt='movie' ></img>
+                        {!movie.image && (
+                            <div className="absolute bottom-0 left-0 right-0 px-3 bg-gray-800 opacity-70">
+                                <p className="text-sm text-white font-bold">{movie.name}</p>
+                            </div>
+                        )}
                     </IonCard>        
                 </IonCol>
             )}

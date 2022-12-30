@@ -1,6 +1,6 @@
 .detailsPoster {
     height: auto;
-    width: 100%;
+    width: 80%;
 }
 
 .descriptionLayout {
@@ -22,9 +22,9 @@
 }
 
 .heart-button-color {
-    background: #2125297e;
+    background: #2125299c;
 }
 
 .heart-button-color:hover {
-    background: #494f557e;
+    background: #494f5579;
 }

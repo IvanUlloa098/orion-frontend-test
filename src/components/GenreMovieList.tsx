@@ -52,6 +52,11 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                                         alt='movie' 
                                         onClick={() => { props.setShowMovieDetailState(movie.id) }} 
                                     />
+                                    {!movie.image && (
+                                        <div className="absolute bottom-0 left-0 right-0 px-3 bg-gray-800 opacity-70">
+                                            <p className="text-sm text-white font-bold">{movie.name}</p>
+                                        </div>
+                                    )}
                                 </IonCard>
                                 
                             )}

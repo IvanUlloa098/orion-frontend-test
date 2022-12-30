@@ -1,6 +1,6 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { addCircle, close} from 'ionicons/icons';
-import React, { useRef, useState } from 'react';
+import { addCircle, close, cloudUpload} from 'ionicons/icons';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import movie from '../types/movie';
 import './SelectedMovieDetails.css'
 import MovieDataService from '../services/MovieDataManagment/service';
@@ -15,6 +15,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     movie.actor = ['', '', ''];
     
     const [showAlert, setShowAlert] = useState(false);
+    const [file, setFile] = useState<File>();
     const [showCreateAlert, setShowCreateAlert] = useState(false);
     const [ datePublished, setDatePublished ] = useState('');
     const [ notSaved, setNotSaved ] = useState(true);
@@ -29,6 +30,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     const actor2InputRef = useRef<HTMLIonInputElement>(null);
     const actor3InputRef = useRef<HTMLIonInputElement>(null);
     const descriptionInputRef = useRef<HTMLIonTextareaElement>(null);
+    const inputFileRef = useRef<HTMLInputElement | null>(null);
 
     const handleDate = (evt: any) => {
         const date = evt.target.value.substr(0, 10); 
@@ -54,7 +56,6 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         setMovieCreated(movie);
 
         if(validInput.filter((x) => x === true).length === 6){
-            MovieDataService.newEntry(movie);   
             setShowCreateAlert(true);  
         }     
     };
@@ -78,6 +79,20 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         prepareData();
         setMovieCreated(movie);
         setShowAlert(true);
+    };
+
+    const handleUploadClick = () => {
+        inputFileRef.current?.click();
+    };
+    
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) {
+            return;
+        }
+
+        setFile(e.target.files[0]);
+
+        // 🚩 do the file upload here normally...
     };
 
     return(
@@ -124,15 +139,22 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                 <IonAlert
                     isOpen={showCreateAlert}
                     onDidDismiss={() => setShowCreateAlert(false)}
-                    header="Movie created"
-                    message="Your new movie has been added to your catalog"
+                    header="Alert"
+                    message="Create movie with the details given?"
                     buttons={[
                             {
                                 text: 'OK',
                                 role: 'confirm',
                                 handler: () => {
+                                    prepareData();
+                                    setMovieCreated(movie);
+                                    MovieDataService.newEntry(movie);
                                     props.dismissCreateMovieModal();
                                 },
+                            },
+                            {
+                                text:'Cancel',
+                                role: 'cancel'
                             }]}
                 />   
                 <form 
@@ -142,7 +164,24 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                     <IonGrid className='ion-padding'>
                         <IonRow>
                             <IonCol className='ion-text-center'>
-                                <IonImg className='detailsPoster' src={'assets/img/no-poster.jpeg'}></IonImg>                                                                                     
+                                <div className='relative'>
+                                    <img className='w-full detailsPoster' src={file?URL.createObjectURL(file):'assets/img/no-poster.jpeg'}></img>  
+                                    <button type="button" onClick={handleUploadClick} className="absolute inline-flex items-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md bottom-2 right-2 p-2 px-4 py-2" >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5 mr-2 bi bi-upload" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                        </svg>
+                                        Upload poster                                  
+                                    </button>
+                                    <input
+                                        type="file"
+                                        id="file"
+                                        ref={inputFileRef}
+                                        accept=".jpg, .png, .jpeg"
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                    />  
+                                </div>                                                                                                                                                
                             </IonCol>
                             <IonCol>
                                 <IonItem className={`${isValid[1] && 'ion-valid'} ${isValid[1] === false && 'ion-invalid'}`}>
