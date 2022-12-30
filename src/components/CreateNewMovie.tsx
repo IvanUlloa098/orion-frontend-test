@@ -1,5 +1,5 @@
-import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
-import { addCircle, close, cloudUpload} from 'ionicons/icons';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { addCircle, close} from 'ionicons/icons';
 import React, { ChangeEvent, useRef, useState } from 'react';
 import movie from '../types/movie';
 import './SelectedMovieDetails.css'
@@ -13,9 +13,10 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     const movie = {} as movie;
     const validInput = Array(6).fill(null);
     movie.actor = ['', '', ''];
+    movie.image = "";
     
     const [showAlert, setShowAlert] = useState(false);
-    const [file, setFile] = useState<File>();
+    const [file, setFile] = useState<string>();
     const [showCreateAlert, setShowCreateAlert] = useState(false);
     const [ datePublished, setDatePublished ] = useState('');
     const [ notSaved, setNotSaved ] = useState(true);
@@ -48,14 +49,15 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         movie.actor[0] = actor1InputRef.current?.value+'';
         movie.actor[1] = actor2InputRef.current?.value+'';
         movie.actor[2] = actor3InputRef.current?.value+'';
+        movie.image = file? file:"";
     }
 
     const submit = async () => {
         prepareData();  
         validate();
-        setMovieCreated(movie);
+        setMovieCreated(movie);    
 
-        if(validInput.filter((x) => x === true).length === 6){
+        if(validInput.filter((x) => x === true).length >= 6){
             setShowCreateAlert(true);  
         }     
     };
@@ -65,12 +67,13 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         const validInputCopy = validInput;
 
         Object.entries(movieCopy).forEach(([key, value], index) => {
-            validInputCopy[index] = value==='undefined' || value===''?false:true; 
+            console.log(key);
+            validInputCopy[index] = (value==='undefined' || value==='')?false:true; 
         });
         
         const expression = movieCopy.actor.filter(x => x !== '' || x === undefined).length;
         validInputCopy[0] = expression>0 && expression<=3
-        validInput[3]=movieGenreSelected?true:false;
+        validInputCopy[4]=movieGenreSelected?true:false;
 
         setIsValid(validInputCopy.slice());
     };
@@ -86,13 +89,34 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     };
     
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        prepareData();
         if (!e.target.files) {
             return;
         }
 
-        setFile(e.target.files[0]);
+        const file = e.target.files[0];
 
-        // 🚩 do the file upload here normally...
+        convertBase64(file)
+            .then(dataURL => {
+                movie.image = ''+dataURL;   
+                setFile(movie.image);           
+                setMovieCreated(movie);
+            })
+    };
+
+    const convertBase64 = (file: File) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+    
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+    
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
     };
 
     return(
@@ -165,8 +189,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                         <IonRow>
                             <IonCol className='ion-text-center'>
                                 <div className='relative'>
-                                    <img className='w-full detailsPoster' src={file?URL.createObjectURL(file):'assets/img/no-poster.jpeg'}></img>  
-                                    <button type="button" onClick={handleUploadClick} className="absolute inline-flex items-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md bottom-2 right-2 p-2 px-4 py-2" >
+                                    <img className='w-full detailsPoster' src={file?file:'assets/img/no-poster.jpeg'} alt='poster'></img>  
+                                    <button type="button" onClick={handleUploadClick} className="absolute inline-flex items-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md bottom-2 right-2 p-2 px-3 py-2" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5 mr-2 bi bi-upload" viewBox="0 0 16 16">
                                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                                             <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
@@ -184,18 +208,18 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 </div>                                                                                                                                                
                             </IonCol>
                             <IonCol>
-                                <IonItem className={`${isValid[1] && 'ion-valid'} ${isValid[1] === false && 'ion-invalid'}`}>
+                                <IonItem className={`${isValid[2] && 'ion-valid'} ${isValid[2] === false && 'ion-invalid'}`}>
                                     <IonLabel position="stacked">Movie Title</IonLabel>
                                     <IonInput value={movieCreated.name} ref={tittleInputRef} placeholder={'Tittle...'}></IonInput>                                        
                                     <IonNote slot="error">This field is required</IonNote>
                                 </IonItem>
-                                <IonItem className={`${isValid[2] && 'ion-valid'} ${isValid[2] === false && 'ion-invalid'}`}>
+                                <IonItem className={`${isValid[3] && 'ion-valid'} ${isValid[3] === false && 'ion-invalid'}`}>
                                     <IonLabel position="stacked">Director</IonLabel>
                                     <IonInput value={movieCreated.director} ref={directorInputRef } placeholder={'Director...'}></IonInput>
                                     <IonNote slot="error">This field is required</IonNote>
                                 </IonItem>
                                 <IonList>
-                                    <IonItem  className={`${isValid[3] && 'ion-valid'} ${isValid[3] === false && 'ion-invalid'}`}>
+                                    <IonItem  className={`${isValid[4] && 'ion-valid'} ${isValid[4] === false && 'ion-invalid'}`}>
                                         <IonLabel position="stacked">Genre</IonLabel>
                                         <IonSelect 
                                             interface="popover" 
@@ -210,7 +234,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                         <IonNote slot="error">This field is required</IonNote>
                                     </IonItem>
                                 </IonList>                                
-                                <IonItem className={`${isValid[4] && 'ion-valid'} ${isValid[4] === false && 'ion-invalid'}`}>
+                                <IonItem className={`${isValid[5] && 'ion-valid'} ${isValid[5] === false && 'ion-invalid'}`}>
                                     <IonLabel position="stacked">Release Date</IonLabel>
                                     <IonInput
                                         id="click-trigger"
@@ -236,7 +260,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 </IonItem>
                             </IonCol>
                             <IonCol className='ion-col-description'>
-                                <IonItem counter={true} className={`${isValid[5] && 'ion-valid'} ${isValid[5] === false && 'ion-invalid'} descriptionLayout`}>
+                                <IonItem counter={true} className={`${isValid[6] && 'ion-valid'} ${isValid[6] === false && 'ion-invalid'} descriptionLayout`}>
                                     <IonLabel position="stacked" >Description</IonLabel>                                    
                                     <IonTextarea
                                         value={movieCreated.description}
