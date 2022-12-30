@@ -1,6 +1,6 @@
 import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { close, create, heart, heartOutline, save, trash } from 'ionicons/icons';
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
 import './SelectedMovieDetails.css'
 import { Rating } from 'react-simple-star-rating'
 import MovieDataService from '../services/MovieDataManagment/service';
@@ -14,6 +14,7 @@ interface ContainerProps {
 
 const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {  
     const [ switchEdit, setSwitchEdit ] = useState(false);
+    const [file, setFile] = useState<string>();
     const [showAlertClose, setShowAlertClose] = useState(false);  
     const [showAlertDeletion, setShowAlertDeletion] = useState(false);
     const [ favorite, setFavorite ] = useState(props.selectedMovie?props.selectedMovie.favorite:false);
@@ -28,7 +29,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
     const actor2InputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.actor[1]:'');
     const actor3InputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.actor[2]:'');
     const descriptionInputRef = useRef<HTMLIonTextareaElement>(props.selectedMovie?props.selectedMovie.description:'');
-    
+    const inputFileRef = useRef<HTMLInputElement | null>(null);
+
     const handleRating = (rate: number) => {
         setRating(rate)
         props.selectedMovie.ratingValue = rate;
@@ -63,6 +65,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         props.selectedMovie.datePublished = dateInputRef.current.value;
         props.selectedMovie.actor = actors;
         props.selectedMovie.description = descriptionInputRef.current.value;
+        props.selectedMovie.image = file? file:"";
     }
 
     const saveEdit = () => {
@@ -73,7 +76,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         MovieDataService.updateMovie(props.selectedMovie);          
     };
 
-    const handleInputChange = () => {
+    const handleInputChange = async () => {
         setSwitchEdit(true);
     };
 
@@ -91,6 +94,42 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         MovieDataService.deleteMovie(props.selectedMovie);
         props.dismissMovieDetailsModal();
     }
+
+    const handleUploadClick = () => {
+        inputFileRef.current?.click();
+    };
+    
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        prepareData();
+        setSwitchEdit(true);
+
+        if (!e.target.files) {
+            return;
+        }
+
+        const file = e.target.files[0];
+
+        convertBase64(file)
+            .then(dataURL => {
+                props.selectedMovie.image = ''+dataURL;   
+                setFile(props.selectedMovie.image);
+            })
+    };
+
+    const convertBase64 = (file: File) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+    
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+    
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
 
     return(
         <>
@@ -184,6 +223,27 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                             color='warning'                                            
                                         ></IonIcon>
                                     </button>
+                                    <button 
+                                        type="button" 
+                                        onClick={handleUploadClick} 
+                                        hidden={props.movieDetailsEditState}
+                                        className="absolute inline-flex items-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md bottom-2 right-2 p-2 px-3 py-2" 
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5 mr-2 bi bi-upload" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                                        </svg>
+                                        Upload poster                                  
+                                    </button>
+                                    <input
+                                        type="file"
+                                        id="file"
+                                        ref={inputFileRef}
+                                        accept=".jpg, .png, .jpeg"
+                                        onChange={handleFileChange}
+                                        style={{ display: 'none' }}
+                                        disabled={props.movieDetailsEditState}
+                                    />  
                                 </div>                                                                                     
                                 <IonItem>
                                     <div className='ion-padding-start'>
