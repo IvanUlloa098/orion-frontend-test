@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonNote, IonPopover, IonRow, IonSelect, IonSelectOption, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { addCircle, close} from 'ionicons/icons';
 import React, { ChangeEvent, useRef, useState } from 'react';
 import movie from '../types/movie';
@@ -16,8 +16,9 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     movie.image = "";
     
     const [showAlert, setShowAlert] = useState(false);
-    const [file, setFile] = useState<string>();
     const [showCreateAlert, setShowCreateAlert] = useState(false);
+    const [showImageAlert, setShowImageAlert] = useState(false);
+    const [file, setFile] = useState<string>();    
     const [ datePublished, setDatePublished ] = useState('');
     const [ notSaved, setNotSaved ] = useState(true);
     const [isValid, setIsValid] = useState<boolean[]>(validInput);
@@ -94,14 +95,30 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
             return;
         }
 
+        const reader = new FileReader();
         const file = e.target.files[0];
 
-        convertBase64(file)
-            .then(dataURL => {
-                movie.image = ''+dataURL;   
-                setFile(movie.image);           
-                setMovieCreated(movie);
-            })
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const img = new Image();
+            img.src = reader.result as string;
+            img.onload = () => {
+                const height = img.naturalHeight;
+                const width = img.naturalWidth;
+                const proportion = (height/3)-50
+
+                if(height>=600 && width>=400 && (height-width)>=proportion){
+                    convertBase64(file)
+                    .then(dataURL => {
+                        movie.image = ''+dataURL;   
+                        setFile(movie.image);           
+                        setMovieCreated(movie);
+                    })
+                } else {
+                    setShowImageAlert(true);
+                }
+            };
+        };
     };
 
     const convertBase64 = (file: File) => {
@@ -130,8 +147,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 form='create-movie-form'
                                 type="submit"
                             >
-                                <IonIcon slot='end' icon={addCircle}></IonIcon>
-                                Create
+                                <IonIcon icon={addCircle}></IonIcon>
+                                <IonText className='hidden xl:flex md:flex'>Create</IonText>
                             </IonButton>                            
                         </IonButtons>                       
                     <IonButtons slot="end">                            
@@ -167,7 +184,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                     message="Create movie with the details given?"
                     buttons={[
                             {
-                                text: 'OK',
+                                text: 'Confirm',
                                 role: 'confirm',
                                 handler: () => {
                                     prepareData();
@@ -180,16 +197,28 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 text:'Cancel',
                                 role: 'cancel'
                             }]}
-                />   
+                />
+                <IonAlert
+                    isOpen={showImageAlert}
+                    onDidDismiss={() => setShowImageAlert(false)}
+                    header="Upload Alert"
+                    subHeader='Image given does not meet the requirements:'
+                    message="Taller than wide image, 400 height x 600 width pixels minimum"
+                    buttons={[
+                            {
+                                text: 'OK',
+                                role: 'confirm'
+                            }]}
+                />      
                 <form 
                     id="create-movie-form" 
                     onSubmit={(e) => { e.preventDefault(); submit();}}                        
                 >          
                     <IonGrid className='ion-padding'>
                         <IonRow>
-                            <IonCol className='ion-text-center'>
+                            <IonCol size-md='4' size='auto' size-xl='4' className='ion-text-center'>
                                 <div className='relative'>
-                                    <img className='w-full detailsPoster' src={file?file:'assets/img/no-poster.jpeg'} alt='poster'></img>  
+                                    <IonImg className='w-full detailsPoster' src={file?file:'assets/img/poster-instructions.png'} alt='poster'></IonImg>  
                                     <button type="button" onClick={handleUploadClick} className="absolute inline-flex items-center bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md bottom-2 right-2 p-2 px-3 py-2" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5 mr-2 bi bi-upload" viewBox="0 0 16 16">
                                             <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>

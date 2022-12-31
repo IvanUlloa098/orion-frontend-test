@@ -12,7 +12,7 @@ const AllMovieList: React.FC<ContainerProps> = props => {
     return (
         <IonRow>
             {props.movieCatalog.map((movie: any, index: any) => 
-                <IonCol size='4' size-sm='2' key={movie.id}>      
+                <IonCol size='3' size-xl='2' key={movie.id}>      
                     <IonCard 
                         button 
                         onClick={() => { props.setShowMovieDetailState(movie.id) }} 

@@ -1,5 +1,5 @@
 const api_url: string = 'http://localhost:3000/movies';
-const movie_genres = ['Action', 'Adventure', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Sci-Fi', 'Thriller'];
+const movie_genres = ['Action', 'Adventure','Animation', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Sci-Fi', 'Thriller'];
 
 const movieDataFetch = async ()=>{
     

@@ -1,4 +1,4 @@
-import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonPopover, IonRow, IonSelect, IonSelectOption, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAlert, IonButton, IonButtons, IonCol, IonContent, IonDatetime, IonGrid, IonHeader, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonPopover, IonRow, IonSelect, IonSelectOption, IonText, IonTextarea, IonTitle, IonToolbar } from '@ionic/react';
 import { close, create, heart, heartOutline, save, trash } from 'ionicons/icons';
 import React, { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from 'react';
 import './SelectedMovieDetails.css'
@@ -145,23 +145,23 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                 onClick={() => setShowAlertDeletion(true)}
                                 color='danger'
                             >
-                                <IonIcon slot='end' icon={trash}></IonIcon>
-                                Delete
+                                <IonIcon icon={trash}></IonIcon>
+                                <IonText className='hidden xl:flex md:flex'>Delete</IonText>
                             </IonButton>
                             {switchEdit?
                             (<IonButton 
                                 fill="outline" 
                                 onClick={ saveEdit }
                             >
-                                <IonIcon slot='end' icon={save}></IonIcon>
-                                Save
+                                <IonIcon icon={save}></IonIcon>
+                                <IonText className='hidden xl:flex md:flex'>Save</IonText>
                             </IonButton>):  
                             (<IonButton 
                                 fill="outline" 
                                 onClick={onEditClick}
                             >
-                                <IonIcon slot='end' icon={create}></IonIcon>
-                                Edit
+                                <IonIcon icon={create}></IonIcon>
+                                <IonText className='hidden xl:flex md:flex'>Edit</IonText>
                             </IonButton>)}                                                 
                         </IonButtons>
                         <IonButtons slot="end">                            
@@ -212,7 +212,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                     />                            
                     <IonGrid className='ion-padding'>
                         <IonRow>
-                            <IonCol className='ion-text-center'>
+                            <IonCol size-md='4' size='auto' size-xl='4' className='ion-text-center'>
                                 <div className='relative'>
                                     <IonImg className='w-full detailsPoster' src={props.selectedMovie.image?props.selectedMovie.image:'assets/img/no-poster.jpeg'}></IonImg> 
                                     <button onClick={onFavoriteMovie} className="absolute heart-button-color top-2 right-2 rounded-full  p-2 items-center m-2" >

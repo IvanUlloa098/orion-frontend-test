@@ -40,13 +40,13 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                 allMovieGenres.map((genre, index) =>  
                 <div key={index}>
                     <IonTitle className='ion-padding-top'>{genre}</IonTitle>
-                    <div className='ion-padding relative flex items-center' >
-                        <IonButton className='overflow-button' slot='icon-only'  onClick={() => slideContentLeft('slider-'+index)}>
+                    <div className='ion-padding-start ion-padding-end rounded-md relative flex items-center bg-zinc-900' >
+                        <IonButton className='h-[150px] xl:h-[280px] overflow-button' slot='icon-only'  onClick={() => slideContentLeft('slider-'+index)}>
                             <IonIcon  icon={chevronBack}></IonIcon>
                         </IonButton>
                         <div id={'slider-'+index} className='w-full h-full overflow-x-auto scroll whitespace-nowrap scroll-smooth scrollbar' key={index}>                        
                             {getMovieGivenGenre(genre).map((movie: any) => 
-                                <IonCard key={movie.id} className='w-[190px] inline-block genrePoster' >
+                                <IonCard key={movie.id} className='w-[100px] xl:w-[190px] inline-block genrePoster' >
                                     <img                                                                         
                                         src={movie.image?movie.image:'assets/img/no-poster.jpeg'} 
                                         alt='movie' 
@@ -61,7 +61,7 @@ const GenreMovieList: React.FC<ContainerProps> = props => {
                                 
                             )}
                         </div>  
-                        <IonButton className='overflow-button' slot='icon-only' onClick={() => slideContentRight('slider-'+index)}>
+                        <IonButton className='h-[150px] xl:h-[280px] overflow-button' slot='icon-only' onClick={() => slideContentRight('slider-'+index)}>
                             <IonIcon icon={chevronForward}></IonIcon>
                         </IonButton>                      
                         

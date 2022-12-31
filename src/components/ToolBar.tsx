@@ -1,5 +1,5 @@
-import { IonButton, IonButtons, IonIcon, IonItem, IonList, IonPopover, IonSearchbar, IonToolbar } from '@ionic/react';
-import { filter, heart } from 'ionicons/icons';
+import { IonButton, IonButtons, IonIcon, IonItem, IonList, IonPopover, IonSearchbar, IonText, IonToolbar } from '@ionic/react';
+import { filter, heart, returnUpBack } from 'ionicons/icons';
 import React, { Dispatch, SetStateAction, useState } from 'react';
 
 interface ContainerProps { 
@@ -69,20 +69,21 @@ const ToolBar: React.FC<ContainerProps> = props => {
                     </IonItem>                    
                 </IonList>
             </IonPopover>
-
-            <IonToolbar>
+            
+            <IonToolbar mode='md'>
                 <IonButtons slot="primary">
                     <IonButton onClick={(e: any) => {
                         e.persist();
                         setShowPopover({ showPopover: true, event: e });
                         }}
                     >
-                        <IonIcon slot='start' icon={filter} />  
-                        Sort                         
+                        <IonIcon slot='start' slot-sm='icon-only' icon={filter} />  
+                        <IonText className='hidden xl:flex md:flex'>Sort</IonText>                         
                     </IonButton>                   
                     <IonButton onClick={onSortValueSelectedFavorites}>
-                        <IonIcon slot='start' icon={heart} />
-                        {switchFavorites?'Favorites':'All'}
+                        {switchFavorites?
+                        <><IonIcon slot='start' icon={heart} /><IonText className='hidden xl:flex md:flex'>Favorites</IonText></>:
+                        <><IonIcon slot='start' icon={returnUpBack} /><IonText className='hidden xl:flex md:flex'>All</IonText></>}
                     </IonButton>
                 </IonButtons>
                 <IonSearchbar 

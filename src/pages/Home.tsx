@@ -105,11 +105,12 @@ const Home: React.FC = () => {
   }, [ showMovieDetailState ] );
   
   useEffect(()=>{
+    const searchValueCopy = searchValue;
     const fetchData = async () => {
       await MovieDataService.movieDataFetch()
         .then(function(myJson) {
-          setMovieCatalogSearch(myJson);
-          
+          !searchValue?setMovieCatalogSearch(myJson):setMovieCatalogSearch(movieCatalogSearch);
+
           switch (sortValue) {
             case 'up':
               setMovieCatalog(myJson.sort((a: any,b: any) => a.name > b.name ? 1 : -1));
@@ -123,7 +124,7 @@ const Home: React.FC = () => {
             default:
               setMovieCatalog(myJson);
               break;
-          }
+          }          
         });      
     }
 
@@ -137,7 +138,7 @@ const Home: React.FC = () => {
       </IonHeader>
 
       {movieCatalog && movieCatalog.length>0 && <IonContent fullscreen>
-        <IonHeader>
+        <IonHeader mode='md'>
           <IonItem className='ion-text-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-film" viewBox="0 0 16 16">
               <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
