@@ -4,6 +4,12 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
+/**
+ * App created by IvanUlloa098
+ * 
+ * Include all the additional pages created for this app here and their respective logic for navigation.
+ */
+
 const container = document.getElementById('root');
 const root = createRoot(container!);
 root.render(

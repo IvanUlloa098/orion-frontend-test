@@ -9,20 +9,31 @@ interface ContainerProps {
     setSortValue: Dispatch<SetStateAction<'all' | 'up' | 'down' | 'genre' | 'favorites'>>; 
 };
 
+/**
+ *  Toolbar displayed on top of the movie app containing the searchbar, sort, favorites buttons.
+ * 
+ * @param props 
+ * @returns 
+ */
+
 const ToolBar: React.FC<ContainerProps> = props => {
+    // States declarations (click on favorites and sorting popover)
     const [ switchFavorites, setSwitchFavorites ] = useState(true);
     const [ popoverState, setShowPopover ] = useState({
         showPopover: false,
         event: undefined,
     });
 
+    // Handle select sorting method
     const onSortValueSelected = (value: 'all' | 'up' | 'down' | 'genre' | 'favorites') => {
         setSwitchFavorites(true);
         props.setSortValue(value);
     };
 
+    // Handle favorites button clicked
     const onSortValueSelectedFavorites = () => {
         setSwitchFavorites(!switchFavorites);
+        
         if (switchFavorites){
             props.setSortValue('favorites');
         } else {
@@ -33,6 +44,7 @@ const ToolBar: React.FC<ContainerProps> = props => {
     
     return (
         <>
+            {/** Popover containing the sorting methods available */}
             <IonPopover
                 event={popoverState.event}
                 isOpen={popoverState.showPopover}

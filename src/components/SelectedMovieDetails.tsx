@@ -12,16 +12,29 @@ interface ContainerProps {
     setMovieDetailsEditState: Dispatch<SetStateAction<boolean>>;
 };
 
+/**
+ * When a movie is selected regardless of the sorting method a modal will pop 
+ * up using this component to display the movie details.
+ * The information is display in a grid with diferent items containing the details.
+ * You can edit and save the details alog side deleting the movie.
+ * 
+ * @param props 
+ * @returns 
+ */
+
 const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {  
-    const [ switchEdit, setSwitchEdit ] = useState(false);
-    const [file, setFile] = useState<string>();
+    // States used for certain information and for alerts to pop up
+    const [ switchEdit, setSwitchEdit ] = useState(false); // Click on Edit button state
+    const [file, setFile] = useState<string>(); // File uploaded state
     const [showAlertClose, setShowAlertClose] = useState(false);  
     const [showAlertDeletion, setShowAlertDeletion] = useState(false);
-    const [ favorite, setFavorite ] = useState(props.selectedMovie?props.selectedMovie.favorite:false);
-    const [ rating, setRating ] = useState(props.selectedMovie?props.selectedMovie.ratingValue:0);
+    const [showImageAlert, setShowImageAlert] = useState(false);
+    const [ favorite, setFavorite ] = useState(props.selectedMovie?props.selectedMovie.favorite:false); // Add to favorites button state
+    const [ rating, setRating ] = useState(props.selectedMovie?props.selectedMovie.ratingValue:0); // Change rating state
     const [ datePublished, setDatePublished ] = useState(props.selectedMovie?props.selectedMovie.datePublished:'');
     const [ movieGenreSelected, setMovieGenreSelected ] = useState<string>(props.selectedMovie?props.selectedMovie.genre:'');
     
+    // References for every input containing the details of the movie
     const tittleInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.title:'');
     const directorInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.director:'');
     const dateInputRef = useRef<HTMLIonInputElement>(props.selectedMovie?props.selectedMovie.datePublished:'');
@@ -31,27 +44,27 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
     const descriptionInputRef = useRef<HTMLIonTextareaElement>(props.selectedMovie?props.selectedMovie.description:'');
     const inputFileRef = useRef<HTMLInputElement | null>(null);
 
+    // Change the rating to the one currently selected and update the data calling the API
     const handleRating = (rate: number) => {
         setRating(rate)
         props.selectedMovie.ratingValue = rate;
         MovieDataService.updateMovie(props.selectedMovie);
     };
 
+    // Set or remove movie from favorites and update the data calling the API
     const onFavoriteMovie = () => {
         props.selectedMovie.favorite = !props.selectedMovie.favorite;
         setFavorite(props.selectedMovie.favorite);
         MovieDataService.updateMovie(props.selectedMovie);
     };
 
+    // Change the state of the inputs to be able to interact with them
     const onEditClick = () => {
         props.setMovieDetailsEditState(false);
     };
 
-    const handleDate = (evt: any) => {
-        const date = evt.target.value.substr(0, 10);
-        setDatePublished(date);
-    }
-
+    // Method used to store a snapshot of the current date present in the inputs 
+    // This method will prevent data loss if the inputs get reset to the default value
     const prepareData = () => {
         const actors = [
             actor1InputRef.current.value,
@@ -65,40 +78,55 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
         props.selectedMovie.datePublished = dateInputRef.current.value;
         props.selectedMovie.actor = actors;
         props.selectedMovie.description = descriptionInputRef.current.value;
-        props.selectedMovie.image = file? file:"";
+        props.selectedMovie.image = file? file:props.selectedMovie.image;
     }
 
+    // Save editted data to the database calling the API
     const saveEdit = () => {
         prepareData();
-
         props.setMovieDetailsEditState(true);
         setSwitchEdit(false);
         MovieDataService.updateMovie(props.selectedMovie);          
     };
 
+    // Handle change on any input to enable the save button
     const handleInputChange = async () => {
+        prepareData();
         setSwitchEdit(true);
     };
 
+    // Handle change on the genre input to enable the save button
     const handleInputChangeGenre = (evt: string) => {
+        prepareData();
         setSwitchEdit(true);
         setMovieGenreSelected(evt);
     };
 
+    // Change the previous date displayed to the one selected
+    const handleDate = (evt: any) => {
+        prepareData();
+        const date = evt.target.value.substr(0, 10);
+        setDatePublished(date);
+    }
+
+    // Determines if the changes have been saved or not
     const onExitDetails = () => {
         prepareData();
         setShowAlertClose(true);
     };
 
+    // Deletes the movie if Confirm is selected
     const onConfirmDeletion = () => {
         MovieDataService.deleteMovie(props.selectedMovie);
         props.dismissMovieDetailsModal();
     }
 
+    // Handles the upload new movie poster button to open the device's file explorer
     const handleUploadClick = () => {
         inputFileRef.current?.click();
     };
     
+    // Handles file uploading and preview of the image
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         prepareData();
         setSwitchEdit(true);
@@ -107,15 +135,33 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
             return;
         }
 
+        const reader = new FileReader();
         const file = e.target.files[0];
 
-        convertBase64(file)
-            .then(dataURL => {
-                props.selectedMovie.image = ''+dataURL;   
-                setFile(props.selectedMovie.image);
-            })
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            const img = new Image();
+            img.src = reader.result as string;
+            img.onload = () => {
+                const height = img.naturalHeight;
+                const width = img.naturalWidth;
+                const proportion = (height/3)-50
+                
+                // The size of the image will be compared to see if it is a poster
+                if(height>=600 && width>=400 && (height-width)>=proportion){
+                    convertBase64(file)
+                    .then(dataURL => {
+                        props.selectedMovie.image = ''+dataURL;    
+                        setFile(props.selectedMovie.image);
+                    })
+                } else {
+                    setShowImageAlert(true);
+                }
+            };
+        };
     };
 
+    // Covert image to Base64 to be stored as a string (fake API constraints)
     const convertBase64 = (file: File) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -136,6 +182,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
             {props.selectedMovie && (
                 <>               
                 <IonHeader  collapse="fade" mode='ios'>
+                    {/** Toolbar containing the buttons available for interaction */}
                     <IonToolbar>
                         <IonTitle className='ion-padding-top ion-text-center'>Movie Details</IonTitle>
                         <IonButtons slot='start'>
@@ -171,7 +218,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                         </IonButtons>
                     </IonToolbar>
                 </IonHeader>
-                <IonContent>     
+                <IonContent> 
+                    {/** Alert if changes have not been saved */}    
                     <IonAlert
                         isOpen={showAlertClose}
                         onDidDismiss={() => setShowAlertClose(false)}
@@ -194,6 +242,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                     },
                                 }]}
                     />  
+
+                    {/** Alert when deletion button is clicked */}
                     <IonAlert
                         isOpen={showAlertDeletion}
                         onDidDismiss={() => setShowAlertDeletion(false)}
@@ -209,10 +259,26 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                     text:'Cancel',
                                     role: 'cancel'
                                 }]}
-                    />                            
+                    />   
+
+                    {/** Alert if the image does not meet the requirements */}
+                    <IonAlert
+                        isOpen={showImageAlert}
+                        onDidDismiss={() => setShowImageAlert(false)}
+                        header="Upload Alert"
+                        subHeader='Image given does not meet the requirements:'
+                        message="Taller than wide image, 400 height x 600 width pixels minimum"
+                        buttons={[
+                                {
+                                    text: 'OK',
+                                    role: 'confirm'
+                                }]}
+                    />  
+
                     <IonGrid className='ion-padding'>
                         <IonRow>
                             <IonCol size-md='4' size='auto' size-xl='4' className='ion-text-center'>
+                                {/** Heart button to add movies to favorites */}
                                 <div className='relative'>
                                     <IonImg className='w-full detailsPoster' src={props.selectedMovie.image?props.selectedMovie.image:'assets/img/no-poster.jpeg'}></IonImg> 
                                     <button onClick={onFavoriteMovie} className="absolute heart-button-color top-2 right-2 rounded-full  p-2 items-center m-2" >
@@ -244,7 +310,8 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                         style={{ display: 'none' }}
                                         disabled={props.movieDetailsEditState}
                                     />  
-                                </div>                                                                                     
+                                </div>    
+                                {/** Star rating component */}                                                                                 
                                 <IonItem>
                                     <div className='ion-padding-start'>
                                         <Rating 

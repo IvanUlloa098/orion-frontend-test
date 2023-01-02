@@ -10,21 +10,23 @@ interface ContainerProps {
 };
 
 const CreateNewMovie: React.FC<ContainerProps> = (props) => { 
-    const movie = {} as movie;
-    const validInput = Array(6).fill(null);
+    const movie = {} as movie; // Object of movie type containing all the details neccesary to create a new entry
+    const validInput = Array(6).fill(null); // Input array to set th default validation value
     movie.actor = ['', '', ''];
     movie.image = "";
     
+    // States used for certain information and for alerts to pop up
     const [showAlert, setShowAlert] = useState(false);
     const [showCreateAlert, setShowCreateAlert] = useState(false);
     const [showImageAlert, setShowImageAlert] = useState(false);
-    const [file, setFile] = useState<string>();    
     const [ datePublished, setDatePublished ] = useState('');
-    const [ notSaved, setNotSaved ] = useState(true);
-    const [isValid, setIsValid] = useState<boolean[]>(validInput);
+    const [file, setFile] = useState<string>(); // File uploaded state
+    const [ notSaved, setNotSaved ] = useState(true); // State of data entered
+    const [isValid, setIsValid] = useState<boolean[]>(validInput); // State to determine required inputs
     const [movieCreated, setMovieCreated] = useState<movie>(movie);
     const [ movieGenreSelected, setMovieGenreSelected ] = useState<string>('');
     
+    // References for every input containing the details of the movie
     const tittleInputRef = useRef<HTMLIonInputElement>(null);
     const directorInputRef = useRef<HTMLIonInputElement>(null);
     const dateInputRef = useRef<HTMLIonInputElement>(null);
@@ -34,6 +36,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     const descriptionInputRef = useRef<HTMLIonTextareaElement>(null);
     const inputFileRef = useRef<HTMLInputElement | null>(null);
 
+    // Change the previous date displayed to the one selected
     const handleDate = (evt: any) => {
         const date = evt.target.value.substr(0, 10); 
         setDatePublished(date);
@@ -41,6 +44,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         setMovieCreated(movie);
     }
 
+    // Method used to store a snapshot of the current date present in the inputs 
+    // This method will prevent data loss if the inputs get reset to the default value
     const prepareData = () => {
         movie.name = tittleInputRef.current?.value?tittleInputRef.current?.value.toString():'';
         movie.director = directorInputRef.current?.value?directorInputRef.current?.value.toString():'';
@@ -53,16 +58,19 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         movie.image = file? file:"";
     }
 
+    // Method triggered when data is submitted
     const submit = async () => {
         prepareData();  
         validate();
         setMovieCreated(movie);    
 
         if(validInput.filter((x) => x === true).length >= 6){
+            // Alert pop up to confirm movie creation
             setShowCreateAlert(true);  
         }     
     };
 
+    // Determines if all the information required has been entered
     const validate = () => {
         const movieCopy = movie;
         const validInputCopy = validInput;
@@ -79,16 +87,20 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         setIsValid(validInputCopy.slice());
     };
 
+    // Handles the exit button actions
     const onExitDetails = () => {
         prepareData();
         setMovieCreated(movie);
+        // Alert will pop up to discard movie
         setShowAlert(true);
     };
 
+    // Handles the upload new movie poster button to open the device's file explorer
     const handleUploadClick = () => {
         inputFileRef.current?.click();
     };
     
+    // Handles file uploading and preview of the image
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         prepareData();
         if (!e.target.files) {
@@ -107,6 +119,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                 const width = img.naturalWidth;
                 const proportion = (height/3)-50
 
+                // The size of the image will be compared to see if it is a poster
                 if(height>=600 && width>=400 && (height-width)>=proportion){
                     convertBase64(file)
                     .then(dataURL => {
@@ -121,6 +134,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
         };
     };
 
+    // Covert image to Base64 to be stored as a string (fake API constraints)
     const convertBase64 = (file: File) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -139,6 +153,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
     return(
         <>            
             <IonHeader  collapse="fade" mode='ios'>
+                {/** Toolbar containing the buttons available for interaction */}
                 <IonToolbar>
                     <IonTitle className='ion-padding-top ion-text-center'>Create New Movie</IonTitle> 
                     <IonButtons slot="start" className='ion-padding-start'>                            
@@ -158,7 +173,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
-            <IonContent>     
+            <IonContent> 
+                {/** Alert if you exit the modal */}    
                 <IonAlert
                     isOpen={showAlert}
                     onDidDismiss={() => setShowAlert(false)}
@@ -176,7 +192,9 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 text:'Cancel',
                                 role: 'cancel'
                             }]}
-                />   
+                />
+                   
+                {/** Alert to confirm creation */}
                 <IonAlert
                     isOpen={showCreateAlert}
                     onDidDismiss={() => setShowCreateAlert(false)}
@@ -198,6 +216,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 role: 'cancel'
                             }]}
                 />
+
+                {/** Alert if the image does not meet the requirements */}
                 <IonAlert
                     isOpen={showImageAlert}
                     onDidDismiss={() => setShowImageAlert(false)}
@@ -209,7 +229,8 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                 text: 'OK',
                                 role: 'confirm'
                             }]}
-                />      
+                /> 
+
                 <form 
                     id="create-movie-form" 
                     onSubmit={(e) => { e.preventDefault(); submit();}}                        

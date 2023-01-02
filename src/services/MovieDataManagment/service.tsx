@@ -1,3 +1,14 @@
+/**
+ * This service handles the calls to the API (in this case json-server)
+ * It includes the methods to
+ *    - fetch all data
+ *    - update entry given an id
+ *    - create a new entry
+ *    - delete entry
+ *    - get the genres available
+ * 
+ */
+
 const api_url: string = 'http://localhost:3000/movies';
 const movie_genres = ['Action', 'Adventure','Animation', 'Biography', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror', 'Sci-Fi', 'Thriller'];
 
