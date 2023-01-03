@@ -1,9 +1,11 @@
 # Movie Managment Web Application
 
-Movie Catalog is a web application in which you can view, search, add, edit and delete movies from a database. The application was developed using [Ionic Framework](https://ionicframework.com) in combination with [React](https://es.reactjs.org).
+Movie Catalog is a web application in which you can view, search, add, edit and delete movies from a database. The application was developed using [Ionic Framework](https://ionicframework.com) in combination with [React](https://es.reactjs.org). Additional styling was done using [Tailwind CSS]( https://tailwindcss.com) utilities.
 
 ## Instalation
-> **_NOTE:_** This application was developed using [Node.js]( https://nodejs.org) version  ***16.13.1*** higher versions could cause the developer server to fail compiling the React application. It’s recommended to use [NVM]( https://github.com/nvm-sh/nvm) to manage the different versions on Node.
+> **_NOTE:_** This application was developed using [Node.js]( https://nodejs.org) version  ***16.13.1*** higher versions could cause the developer server to fail compiling the React application. It’s recommended to use [NVM]( https://github.com/nvm-sh/nvm) to manage the different versions of Node.
+
+From now on it is assumed that you have used Node.js and NPM in the past. You can download the version required [here]( https://nodejs.org/download/release/v16.13.1/) or use a version manager. 
 
 ### Getting started 
 
@@ -62,4 +64,6 @@ If the app does not display anything but the search bar, it means that it is not
 const api_url: string = 'http://localhost:3000/movies';
 ```
 Replace the URL found there with the one given to you by *json-server* server and save it. You should now be able to connect to the fake API.
+
+
 

@@ -1,4 +1,4 @@
-import { IonButton, IonButtons, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonContent, IonGrid, IonHeader, IonIcon, IonItem, IonModal, IonPage, IonText, IonTitle } from '@ionic/react';
 import { useEffect, useRef, useState } from 'react';
 import './Home.css';
 import AllMovieList from '../components/AllMovieList';
@@ -103,7 +103,6 @@ const Home: React.FC = () => {
 
   // This hook fetches the data from the API and will set the default movie catalog as well as a copy of it for filtering purposes
   useEffect(()=>{
-    const searchValueCopy = searchValue;
     const fetchData = async () => {
       await MovieDataService.movieDataFetch()
         .then(function(myJson) {
@@ -158,7 +157,7 @@ const Home: React.FC = () => {
       </IonHeader>
 
       {/** Check if the movie catalog has been fetched from the API */}
-      {movieCatalog && movieCatalog.length>0 && <IonContent fullscreen>
+      <IonContent fullscreen>
         <IonHeader mode='md'>
           <IonItem className='ion-text-center'>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-film" viewBox="0 0 16 16">
@@ -169,6 +168,7 @@ const Home: React.FC = () => {
               <IonButton
                 fill="solid"
                 color='primary'
+                disabled={!movieCatalog}
                 onClick={() => setShowCreateMovieModal(true)}
               >
                 <IonIcon slot='start' icon={add}></IonIcon>
@@ -178,53 +178,70 @@ const Home: React.FC = () => {
           </IonItem>   
         </IonHeader>
 
-        {/** Movie details and create new movie modals (hidden by default) */}
-        <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modalMovieDetails}>
-          <SelectedMovieDetails 
-            selectedMovie={ movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] } 
-            dismissMovieDetailsModal={dismissMovieDetailsModal} 
-            movieDetailsEditState={movieDetailsEditState}
-            setMovieDetailsEditState={setMovieDetailsEditState}
-          ></SelectedMovieDetails>
-        </IonModal>
-        
-        <IonModal backdropDismiss={false} id="create-modal" isOpen={showCreateMovieModal} ref={modalCreateMovie}>
-          <CreateNewMovie
-            dismissCreateMovieModal={dismissCreateMovieModal}            
-          ></CreateNewMovie>
-        </IonModal>
-
-        {/** Components that display the sorted and filteres data according to the inputs given */}
-        {(sortValue !== 'genre' &&
-          sortValue !== 'favorites' &&
-         !searchValue)  && ( 
-          <IonGrid className='ion-padding-end' fixed={true} >
-            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
-            <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
-          </IonGrid>       
-        )}
-
-        {(sortValue === 'genre' && !searchValue) && (     
-          <div className='container-fluid'>     
-            <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>                     
+        {/** This will be displayed when there is no connection to the API */}
+        {!movieCatalog && <div className='ion-padding'>
+          <div className="container">
+            <strong>Maybe still connecting to the API?</strong>
+            <p>Check if you have connection to JSON server</p>
           </div>
-        )}
+        </div>}
 
-        {(sortValue === 'favorites')  && ( 
-          <IonGrid fixed={true} >
-            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
-            <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
-          </IonGrid>       
-        )}
+        {/** When the movie catalog is empty this will be displayed */}
+        {movieCatalog && movieCatalog.length===0 && <div className='ion-padding'>
+          <div className="container">
+            <strong>Oops... Nothing here for the moment!</strong>
+            <p>Start adding movies by clicking [+ NEW MOVIE]</p>
+          </div>
+        </div>}
+        
+        {movieCatalog && movieCatalog.length>0 && <div>
+          {/** Movie details and create new movie modals (hidden by default) */}
+          <IonModal onDidDismiss={onMovieDetailsModalDismiss} isOpen={showMovieDetailsModal} id="movie-modal" ref={modalMovieDetails}>
+            <SelectedMovieDetails 
+              selectedMovie={ movieCatalog.filter((obj: any) => {return obj.id === showMovieDetailState})[0] } 
+              dismissMovieDetailsModal={dismissMovieDetailsModal} 
+              movieDetailsEditState={movieDetailsEditState}
+              setMovieDetailsEditState={setMovieDetailsEditState}
+            ></SelectedMovieDetails>
+          </IonModal>
+          
+          <IonModal backdropDismiss={false} id="create-modal" isOpen={showCreateMovieModal} ref={modalCreateMovie}>
+            <CreateNewMovie
+              dismissCreateMovieModal={dismissCreateMovieModal}            
+            ></CreateNewMovie>
+          </IonModal>
 
-        {(searchValue)  && ( 
-          <IonGrid fixed={true} >
-            <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
-            <AllMovieList movieCatalog={movieCatalogSearch} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
-          </IonGrid>       
-        )}
+          {/** Components that display the sorted and filteres data according to the inputs given */}
+          {(sortValue !== 'genre' &&
+            sortValue !== 'favorites' &&
+          !searchValue)  && ( 
+            <IonGrid className='ion-padding-end' fixed={true} >
+              <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+              <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
+            </IonGrid>       
+          )}
 
-      </IonContent>}
+          {(sortValue === 'genre' && !searchValue) && (     
+            <div className='container-fluid'>     
+              <GenreMovieList showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} movieCatalog={movieCatalog}/>                     
+            </div>
+          )}
+
+          {(sortValue === 'favorites')  && ( 
+            <IonGrid fixed={true} >
+              <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+              <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
+            </IonGrid>       
+          )}
+
+          {(searchValue)  && ( 
+            <IonGrid fixed={true} >
+              <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+              <AllMovieList movieCatalog={movieCatalogSearch} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
+            </IonGrid>       
+          )}
+        </div>}
+      </IonContent>
     </IonPage>
   );
 };
