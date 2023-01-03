@@ -145,10 +145,11 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
             img.onload = () => {
                 const height = img.naturalHeight;
                 const width = img.naturalWidth;
-                const proportion = (height/3)-50
-                
+                const proportionThreshhold1 = (height*0.66) // Proportion based of an stardard movie poster
+                const proportionThreshhold2 = (height*0.78) // Proportion to be more forgiving at the time of uploading an image
+
                 // The size of the image will be compared to see if it is a poster
-                if(height>=600 && width>=400 && (height-width)>=proportion){
+                if((height>=600 && width>=400) && (width>=proportionThreshhold1 && width<=proportionThreshhold2)){
                     convertBase64(file)
                     .then(dataURL => {
                         props.selectedMovie.image = ''+dataURL;    
