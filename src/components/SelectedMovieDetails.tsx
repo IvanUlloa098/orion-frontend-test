@@ -325,7 +325,7 @@ const SelectedMovieDetails: React.FC<ContainerProps> = (props) => {
                                     </div>                                    
                                 </IonItem>
                             </IonCol>
-                            <IonCol>
+                            <IonCol size-md='4' size='auto' size-xl='4'>
                                 <IonItem>
                                     <IonLabel position="stacked">Movie Title</IonLabel>
                                     <IonInput 

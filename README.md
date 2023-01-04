@@ -3,7 +3,7 @@
 Movie Catalog is a web application in which you can view, search, add, edit and delete movies from a database. The application was developed using [Ionic Framework](https://ionicframework.com) in combination with [React](https://es.reactjs.org). Additional styling was done using [Tailwind CSS]( https://tailwindcss.com) utilities.
 
 ## Instalation
-> **_NOTE:_** This application was developed using [Node.js]( https://nodejs.org) version  ***16.13.1*** higher versions could cause the developer server to fail compiling the React application. It’s recommended to use [NVM]( https://github.com/nvm-sh/nvm) to manage the different versions of Node.
+> **_NOTE:_** This application was developed using [Node.js]( https://nodejs.org) version  ***16.13.1***. Higher versions could cause the developer server to fail compiling the React application. It’s recommended to use [NVM]( https://github.com/nvm-sh/nvm) to manage the different versions of Node.
 
 From now on it is assumed that you have used Node.js and NPM in the past. You can download the version required [here]( https://nodejs.org/download/release/v16.13.1/) or use a version manager. 
 
@@ -28,7 +28,7 @@ This application does not connect to real API by default. What was used to fake 
 ```bash
 npm install -g json-server
 ```
-The repository includes a JSON file ([movie-database.json](https://github.com/IvanUlloa098/orion-frontend-test/blob/master/package.json)) with the example data to create the database to our fake API. Put the file in a directory outside the project’s folder and navigate to it using your operating system command prompt. Once inside the directory containing the JSON file with the example data type: 
+The repository includes a JSON file ([movie-database.json](https://github.com/IvanUlloa098/orion-frontend-test/blob/master/package.json)) with the example data to create the database to our fake API. Put the file in a directory outside the project’s folder and navigate to it using your operating system command prompt. Once inside the directory containing the JSON file with the example data, type: 
 ```bash
 $ json-server --watch movie-database.json
 
@@ -111,9 +111,9 @@ The [+ NEW MOVIE] button is located on the top right of the home screen (in colo
 
 ![create movie](https://github.com/IvanUlloa098/orion-frontend-test/blob/master/public/assets/img/tutorial/create_movie.png?raw=true)
 
-In the same way you got an upload poster button to open the system’s file explorer and add an image to your movie, as long as the poster fits the requirements. There repository contains some example posters to upload in *example-posters.zip*
+In the same way you got an upload poster button to open the system’s file explorer and add an image to your movie, as long as the poster fits the requirements. There repository contains some example posters to upload in [example-posters.zip](https://github.com/IvanUlloa098/orion-frontend-test/blob/master/example-posters.zip)
 
-Once we are done inserting the details we can click the create button ( <img src="https://github.com/IvanUlloa098/orion-frontend-test/blob/master/public/assets/img/tutorial/create_button.png?raw=true" height="25" alt="upload-button"> ) to create our new movie. All details are required to be filled except for the movie poster. If any detail is missing a note will appear underneath it: 
+Once we are done inserting the details we can click the create button ( <img src="https://github.com/IvanUlloa098/orion-frontend-test/blob/master/public/assets/img/tutorial/create_button.png?raw=true" height="25" alt="upload-button"> ) to create our new movie. *All details are required* to be filled except for the movie poster. If any detail is missing a note will appear underneath it: 
 
 ![create movie](https://github.com/IvanUlloa098/orion-frontend-test/blob/master/public/assets/img/tutorial/required_field.png?raw=true)
 

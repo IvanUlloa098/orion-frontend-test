@@ -228,7 +228,7 @@ const Home: React.FC = () => {
           )}
 
           {(sortValue === 'favorites')  && ( 
-            <IonGrid fixed={true} >
+            <IonGrid className='ion-padding-end' fixed={true} >
               <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
               <AllMovieList movieCatalog={movieCatalog} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
             </IonGrid>       
@@ -236,7 +236,7 @@ const Home: React.FC = () => {
 
           {(searchValue)  && ( 
             <IonGrid fixed={true} >
-              <IonTitle size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
+              <IonTitle className='ion-padding-end' size='small' color='medium'>{sortValue.toUpperCase()}</IonTitle>
               <AllMovieList movieCatalog={movieCatalogSearch} showMovieDetailState={showMovieDetailState} setShowMovieDetailState={setShowMovieDetailState} />
             </IonGrid>       
           )}

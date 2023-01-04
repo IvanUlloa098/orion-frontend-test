@@ -258,7 +258,7 @@ const CreateNewMovie: React.FC<ContainerProps> = (props) => {
                                     />  
                                 </div>                                                                                                                                                
                             </IonCol>
-                            <IonCol>
+                            <IonCol size-md='4' size='auto' size-xl='4'>
                                 <IonItem className={`${isValid[2] && 'ion-valid'} ${isValid[2] === false && 'ion-invalid'}`}>
                                     <IonLabel position="stacked">Movie Title</IonLabel>
                                     <IonInput value={movieCreated.name} ref={tittleInputRef} placeholder={'Tittle...'}></IonInput>                                        
